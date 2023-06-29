@@ -1,6 +1,6 @@
 """
-This script is used for extracting feature representations from person images for re-identification using learned
-ReId ResNet34 model.
+This script is used for extracting feature representations from person images for data association and re-identification
+using learned ReId ResNet34 model.
 """
 
 import cv2
