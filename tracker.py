@@ -116,8 +116,8 @@ if __name__ == '__main__':
                          '11.mp4', '12.mp4', '13.mp4', '14.mp4', '15.mp4', '16.mp4', '17.mp4', '18.MOV', '19.mp4']
         else:
             phase = 'test'
-            sequences = ['20.mp4', '21.mp4', '22.mp4', '23.mp4', '24.mp4', '25.MOV', '26.mp4', '27.mp4', '28.mp4', '29.mp4',
-                         '30.mp4', '31.mp4', '32.mp4']
+            sequences = ['20.mp4', '21.mp4', '22.mp4', '23.mp4', '24.mp4', '25.MOV', '26.mp4', '27.mp4', '28.mp4',
+                         '29.mp4', '30.mp4', '31.mp4', '32.mp4']
         overlap_thresh = 0.5
     else:
         print('\nError: Set to correct MOT dataset: Set to 1 for MOT16, to 2 for MOT17-DPM, to 3 for MOT17-FRCNN, to 4 '
@@ -327,8 +327,8 @@ if __name__ == '__main__':
             predicted_intensity, model = Filter.predict(Z_k_feats, pruned_intensity)  # model is returned here
             updated_intensity = Filter.update(Z_k_feats, predicted_intensity)
             pruned_intensity, all_comp = Filter.prune_and_merge(updated_intensity, J_max, use_Jmax)
-            estimates = Filter.extract_states(pruned_intensity)  # extracting estimates from the pruned intensity this gives
-            # better result than extracting them from the updated intensity!
+            estimates = Filter.extract_states(pruned_intensity)  # extracting estimates from the pruned intensity this
+            # gives better result than extracting them from the updated intensity!
 
             M_k_1 = len(estimates['w'])
 
@@ -380,13 +380,15 @@ if __name__ == '__main__':
                     estimates['feat'].append(features_all[f])
 
             # Estimate-to-track association
-            associations, distance_matrix = compute_associations(image, active_tracks, estimates['m'], estimates['feat'],
-                                                                 include_appearance, appearance_weight)
+            associations, distance_matrix = compute_associations(image, active_tracks, estimates['m'],
+                                                                 estimates['feat'], include_appearance,
+                                                                 appearance_weight)
             if associations is None:
                 for i in range(len(estimates['m'])):
                     estimates_w_m_P_score_feat = [estimates['w'][i], estimates['m'][i], estimates['P'][i],
                                                   estimates['score'][i], estimates['feat'][i]]
-                    active_tracks, global_tracks, archived_tracks = create_new_track(frame, active_tracks, global_tracks,
+                    active_tracks, global_tracks, archived_tracks = create_new_track(frame, active_tracks,
+                                                                                     global_tracks,
                                                                                      archived_tracks,
                                                                                      estimates_w_m_P_score_feat, model,
                                                                                      include_ReId, window_ReId)
@@ -408,27 +410,22 @@ if __name__ == '__main__':
                         active_tracks[track_keys[track_indx]].w_k.append(estimates['w'][est_indx])
                         active_tracks[track_keys[track_indx]].m_k = estimates['m'][est_indx]
                         if motion_model_type == 'cv':
-                            active_tracks[track_keys[track_indx]].m_k_store.append(np.array([estimates['m'][est_indx][0] -
-                                                                                             estimates['m'][est_indx][4]/2,
-                                                                                             estimates['m'][est_indx][1] -
-                                                                                             estimates['m'][est_indx][5]/2,
-                                                                                             estimates['m'][est_indx][0],
-                                                                                             estimates['m'][est_indx][1] +
-                                                                                             estimates['m'][est_indx][5]/2])
-                                                                                   )
+                            active_tracks[track_keys[track_indx]].m_k_store.append(np.array(
+                                [estimates['m'][est_indx][0] - estimates['m'][est_indx][4]/2,
+                                 estimates['m'][est_indx][1] - estimates['m'][est_indx][5]/2,
+                                 estimates['m'][est_indx][0], estimates['m'][est_indx][1] +
+                                 estimates['m'][est_indx][5]/2]))
                         else:
-                            active_tracks[track_keys[track_indx]].m_k_store.append(np.array([estimates['m'][est_indx][0] -
-                                                                                             estimates['m'][est_indx][2]/2,
-                                                                                             estimates['m'][est_indx][1] -
-                                                                                             estimates['m'][est_indx][3]/2,
-                                                                                             estimates['m'][est_indx][0],
-                                                                                             estimates['m'][est_indx][1] +
-                                                                                             estimates['m'][est_indx][3]/2])
-                                                                                   )
+                            active_tracks[track_keys[track_indx]].m_k_store.append(np.array(
+                                [estimates['m'][est_indx][0] - estimates['m'][est_indx][2]/2,
+                                 estimates['m'][est_indx][1] - estimates['m'][est_indx][3]/2,
+                                 estimates['m'][est_indx][0], estimates['m'][est_indx][1] +
+                                 estimates['m'][est_indx][3]/2]))
 
                         active_tracks[track_keys[track_indx]].P_k = estimates['P'][est_indx]
                         active_tracks[track_keys[track_indx]].features.append(estimates['feat'][est_indx])
-                        active_tracks[track_keys[track_indx]].update_mean_features()  # Keep on running mean of the features
+                        active_tracks[track_keys[track_indx]].update_mean_features()  # Keep on running mean of the
+                        # features
                         active_tracks[track_keys[track_indx]].scores.append(estimates['score'][est_indx])
                         active_tracks[track_keys[track_indx]].touched = True
                         active_tracks[track_keys[track_indx]].prediction_time = 0
@@ -436,7 +433,7 @@ if __name__ == '__main__':
                         active_tracks[track_keys[track_indx]].predict_status = 0
                         # active_tracks[track_keys[track_indx]].reid_status = 0
                         active_tracks[track_keys[track_indx]].end_frame = frame
-                        global_tracks[track_keys[track_indx]] = active_tracks[track_keys[track_indx]]  # Todo: Check!
+                        global_tracks[track_keys[track_indx]] = active_tracks[track_keys[track_indx]]  # Check this!
                     else:
                         # Create a new track
                         estimates_w_m_P_score_feat = [estimates['w'][est_indx], estimates['m'][est_indx],
@@ -444,19 +441,22 @@ if __name__ == '__main__':
                                                       estimates['feat'][est_indx]]
                         active_tracks, global_tracks, archived_tracks = create_new_track(frame, active_tracks,
                                                                                          global_tracks, archived_tracks,
-                                                                                         estimates_w_m_P_score_feat, model,
-                                                                                         include_ReId, window_ReId)
+                                                                                         estimates_w_m_P_score_feat,
+                                                                                         model, include_ReId,
+                                                                                         window_ReId)
                     matched[est_indx] = 1
 
                 # Next deal with any estimated states not associated with tracks
                 if distance_matrix.shape[0] > len(associations):
                     for indx in range(distance_matrix.shape[0]):
                         if indx not in matched:
-                            estimates_w_m_P_score_feat = [estimates['w'][indx], estimates['m'][indx], estimates['P'][indx],
-                                                          estimates['score'][indx], estimates['feat'][indx]]
+                            estimates_w_m_P_score_feat = [estimates['w'][indx], estimates['m'][indx],
+                                                          estimates['P'][indx], estimates['score'][indx],
+                                                          estimates['feat'][indx]]
                             # Create a new track
                             active_tracks, global_tracks, archived_tracks = create_new_track(frame, active_tracks,
-                                                                                             global_tracks, archived_tracks,
+                                                                                             global_tracks,
+                                                                                             archived_tracks,
                                                                                              estimates_w_m_P_score_feat,
                                                                                              model, include_ReId,
                                                                                              window_ReId)
@@ -509,8 +509,8 @@ if __name__ == '__main__':
                         x2 = int(x1 + w)
                         y2 = int(y1 + h)
 
-                        if x1 > im_width or y1 > im_height or x2 < 0 or y2 < 0:  # If the track bounding box is out of the
-                            # scene.
+                        if x1 > im_width or y1 > im_height or x2 < 0 or y2 < 0:  # If the track bounding box is out of
+                            # the scene.
                             archived_tracks[ky] = active_tracks[ky]
                             del_keys.append(ky)  # Store keys of active tracks to be deleted.
                     for k in del_keys:
@@ -572,10 +572,11 @@ if __name__ == '__main__':
 
                 # Save the tracking results
                 if MOT_data_type == 6:  # For HiEve Challenge submission, it starts from frame 0!
-                    output_file.write("{},{},{},{},{},{},{},-1,-1,-1\n".format(frame-1, trackId, x1, y1, x2 - x1, y2 - y1,
-                                                                           conf))
+                    output_file.write("{},{},{},{},{},{},{},-1,-1,-1\n".format(frame-1, trackId, x1, y1, x2 - x1,
+                                                                               y2 - y1, conf))
                 else:    # For MOT Challenge submission
-                    output_file.write("{},{},{},{},{},{},-1,-1,-1,-1\n".format(frame, trackId, x1, y1, x2 - x1, y2 - y1))
+                    output_file.write("{},{},{},{},{},{},-1,-1,-1,-1\n".format(frame, trackId, x1, y1, x2 - x1,
+                                                                               y2 - y1))
 
             # Display tracks
             if display_tracks:
