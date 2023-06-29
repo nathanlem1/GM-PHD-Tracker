@@ -11,7 +11,7 @@ import torch
 from ultralytics import YOLO
 
 from GM_PHD_Filter import GM_PHD_Filter
-from reid_feature_extractor import FeatureExtractor
+from feature_extractor import FeatureExtractor
 from track_utility import nms_score_mot, constrain_detections_inFrame, create_new_track, compute_associations, \
     addOn_prediction
 
