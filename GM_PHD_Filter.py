@@ -240,7 +240,7 @@ class GM_PHD_Filter:
 
             total_w_d = 0.0
             for j in range(num_targets_Jk_k_minus_1):
-                total_w_d += w[l * num_targets_Jk_k_minus_1 + j]
+                total_w_d = total_w_d + w[l * num_targets_Jk_k_minus_1 + j]
 
             for j in range(num_targets_Jk_k_minus_1):
                 k_k = self.model['clutterIntensity']
@@ -273,7 +273,7 @@ class GM_PHD_Filter:
 
         # Merge the close-together components
         while len(I) > 0:
-            high_weights = np.array(updated_intensity['w'])[I]
+            high_weights = np.array(updated_intensity['w'], dtype=object)[I]
             j = np.argmax(high_weights)
             j = I[j]
             # Find all points with Mahalanobis distance less than U from point updated_intensity['m'][j]
@@ -287,7 +287,7 @@ class GM_PHD_Filter:
                     L.append(thisI)  # Indices of merged Gaussians
 
             # The new weight of the resulted merged Guassian is the summation of the weights of the Gaussian components.
-            w_bar = sum(np.array(updated_intensity['w'])[L])
+            w_bar = sum(np.array(updated_intensity['w'], dtype=object)[L])
             w.append(w_bar)
 
             # The new mean of the merged Gaussian is the weighted average of the merged means of Gaussian components.

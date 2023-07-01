@@ -10,7 +10,7 @@ tracking:
     MOT_data_type: 1  # Set to 1 for MOT16, to 2 for MOT17-DPM, to 3 for MOT17-FRCNN or to 4 for MOT17-SDP or 5 for
     # MOT20 or 6 for HiEve.
 
-    TrainTest_type: 2  # Set to 1 for Training data or to 2 for Test data
+    train_test_type: 2  # Set to 1 for Training data or to 2 for Test data
 
     similarity_threshold: 0.2  # For data association (0.2 gives better result than 0.4)
     prediction_time_threshold: 3  # 5, 10 #  After this time of predictions, don't save and display the track information
@@ -21,9 +21,6 @@ tracking:
     appearance_weight: 0.65  # 0.9  # Appearance weight i.e. motion (spatio-temporal) weight = 1 - appearance_weight
     window_ReId: 2000
     reid_threshold: 0.2  # 0.2 (better) #0.3  # threshold for reid (lower will require greater similarity)
-
-    detections_type: True  # Set to True for using MOT challenge public detections or to False for using custom
-    # detections such as YOLOv8.
 
     feature_extraction_stage_type: False  # Set to True for extracting features from estimates or to False for extracting
     # features from observations which also allows augmented likelihood at the update step.
@@ -37,6 +34,7 @@ tracking:
     include_ReId: True   # Set to True for using ReId or to False for not using ReId.
     display_tracks: True
     display_trajectories: False
+    save_tracked_frames: False
 
 #    directories:
 #        base_data: './data'

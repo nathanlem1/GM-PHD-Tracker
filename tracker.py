@@ -25,7 +25,10 @@ if __name__ == '__main__':
     parser.add_argument('--base_result', type=str, default='./result',
                         help='Path to base tracking result folder to be saved to.')
     parser.add_argument('--reid_path', type=str, default='./model/reid_resnet34.pth',
-                        help='Path to base tracking result folder to be saved to.')
+                        help='Path to reid model.')
+    parser.add_argument('--detections_type', type=str, default=" ",
+                        help='Type of detections to use: set to "yolo" for YOLOv8 custom detections or set to " " for '
+                             'MOT Challenge and HiEve public detections.')
 
     args = parser.parse_args()
     device = "cuda" if torch.cuda.is_available() else "cpu"  # Check how many GPUs are there using
@@ -40,14 +43,13 @@ if __name__ == '__main__':
     display_detections = config['detection']['display_detections']
     motion_model_type = config['tracking']['motion_model_type']
     MOT_data_type = config['tracking']['MOT_data_type']
-    TrainTest_type = config['tracking']['TrainTest_type']
+    train_test_type = config['tracking']['train_test_type']
     similarity_threshold = config['tracking']['similarity_threshold']
     prediction_time_threshold = config['tracking']['prediction_time_threshold']
     track_kill_time_threshold = config['tracking']['track_kill_time_threshold']
     track_min_length = config['tracking']['track_min_length']
     appearance_weight = config['tracking']['appearance_weight']
     window_ReId = config['tracking']['window_ReId']
-    detections_type = config['tracking']['detections_type']
     feature_extraction_stage_type = config['tracking']['feature_extraction_stage_type']
     use_Jmax = config['tracking']['use_Jmax']
     is_AddOn_prediction = config['tracking']['is_AddOn_prediction']
@@ -55,25 +57,27 @@ if __name__ == '__main__':
     include_ReId = config['tracking']['include_ReId']
     display_tracks = config['tracking']['display_tracks']
     display_trajectories = config['tracking']['display_trajectories']
+    save_tracked_frames = config['tracking']['save_tracked_frames']
     base_data = args.base_data
     base_result = args.base_result
     reid_path = args.reid_path
+    detections_type = args.detections_type
 
     # Object detector and feature extractor
-    if not detections_type:
+    if detections_type == 'yolo':
         detector = YOLO('yolov8l.pt')  # YOLOv8: https://github.com/ultralytics/ultralytics
         detector.to(device)
     feat_extractor = FeatureExtractor(reid_path)  # Features extraction using pre-trained ResNet34.
 
     if MOT_data_type == 1:
-        if TrainTest_type == 1:
+        if train_test_type == 1:
             phase = 'train'
             sequences = ['MOT16-02', 'MOT16-04', 'MOT16-05', 'MOT16-09', 'MOT16-10', 'MOT16-11', 'MOT16-13']
         else:
             phase = 'test'
             sequences = ['MOT16-01', 'MOT16-03', 'MOT16-06', 'MOT16-07', 'MOT16-08', 'MOT16-12', 'MOT16-14']
     elif MOT_data_type == 2:
-        if TrainTest_type == 1:
+        if train_test_type == 1:
             phase = 'train'
             sequences = ['MOT17-02-DPM', 'MOT17-04-DPM', 'MOT17-05-DPM', 'MOT17-09-DPM', 'MOT17-10-DPM', 'MOT17-11-DPM',
                          'MOT17-13-DPM']
@@ -82,7 +86,7 @@ if __name__ == '__main__':
             sequences = ['MOT17-01-DPM', 'MOT17-03-DPM', 'MOT17-06-DPM', 'MOT17-07-DPM', 'MOT17-08-DPM', 'MOT17-12-DPM',
                          'MOT17-14-DPM']
     elif MOT_data_type == 3:
-        if TrainTest_type == 1:
+        if train_test_type == 1:
             phase = 'train'
             sequences = ['MOT17-02-FRCNN', 'MOT17-04-FRCNN', 'MOT17-05-FRCNN', 'MOT17-09-FRCNN', 'MOT17-10-FRCNN',
                          'MOT17-11-FRCNN', 'MOT17-13-FRCNN']
@@ -92,7 +96,7 @@ if __name__ == '__main__':
                          'MOT17-12-FRCNN', 'MOT17-14-FRCNN']
         overlap_thresh = 0.5
     elif MOT_data_type == 4:
-        if TrainTest_type == 1:
+        if train_test_type == 1:
             phase = 'train'
             sequences = ['MOT17-02-SDP', 'MOT17-04-SDP', 'MOT17-05-SDP', 'MOT17-09-SDP', 'MOT17-10-SDP', 'MOT17-11-SDP',
                          'MOT17-13-SDP']
@@ -102,7 +106,7 @@ if __name__ == '__main__':
                          'MOT17-14-SDP']
         overlap_thresh = 0.5
     elif MOT_data_type == 5:
-        if TrainTest_type == 1:
+        if train_test_type == 1:
             phase = 'train'
             sequences = ['MOT20-01', 'MOT20-02', 'MOT20-03', 'MOT20-05']
         else:
@@ -110,7 +114,7 @@ if __name__ == '__main__':
             sequences = ['MOT20-04', 'MOT20-06', 'MOT20-07', 'MOT20-08']
         overlap_thresh = 0.5
     elif MOT_data_type == 6:
-        if TrainTest_type == 1:
+        if train_test_type == 1:
             phase = 'train'
             sequences = ['1.mp4', '2.mp4', '3.mp4', '4.mp4', '5.mp4', '6.MP4', '7.mp4', '8.mp4', '9.mp4', '10.MOV',
                          '11.mp4', '12.mp4', '13.mp4', '14.mp4', '15.mp4', '16.mp4', '17.mp4', '18.MOV', '19.mp4']
@@ -202,7 +206,7 @@ if __name__ == '__main__':
 
             image_track = copy.deepcopy(image)
 
-            if detections_type:             # Use MOT challenge public detections
+            if detections_type != 'yolo':             # Use MOT challenge public detections
                 detections = seq_dets[seq_dets[:, 0] == frame, 2:7]
                 if MOT_data_type == 1:
                     if seq == 'MOT16-03' or seq == 'MOT16-04':  # For MOT16-03 and MOT16-04, particularly for DPM
@@ -247,14 +251,14 @@ if __name__ == '__main__':
                         Y = int(dets_cp[i, 3])
                         crop = image[y:Y, x:X, :]
 
-                        # # Extract from each crop
-                        # feats = feat_extractor.extract_features_image(crop)
-                        # features_all.append(feats)
+                        # Extract from each crop
+                        feats = feat_extractor.extract_features_image(crop)
+                        features_all.append(feats)
 
-                        # Or extract from batch of crops. If this fails due to memory issue, try the above one
-                        # (extracting from each crop), particularly for MOT20!
-                        crops.append(crop)
-                    features_all = feat_extractor.extract_features_batch(crops)
+                    #     # Or extract from batch of crops. If this fails due to memory issue, try the above one
+                    #     # (extracting from each crop), particularly for MOT20!
+                    #     crops.append(crop)
+                    # features_all = feat_extractor.extract_features_batch(crops)
 
                     dets_cp_Z[:, 2:4] -= dets_cp_Z[:, 0:2]  # convert [x1,y1,x2,y2] to [x1,y1,w,h]
                     dets_cp_Z[:, 0:2] += dets_cp_Z[:, 2:4]/2.0  # convert [x1,y1,w,h] to [xc,yc,w,h]
@@ -585,6 +589,14 @@ if __name__ == '__main__':
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     cv2.destroyAllWindows()
                     break
+
+            # Save tracked frames
+            if save_tracked_frames:
+                frame_write = format(frame, '06d')
+                save_tracked_frames_folder = result_folder + '/' + seq
+                if not os.path.isdir(save_tracked_frames_folder):
+                    os.mkdir(save_tracked_frames_folder)
+                cv2.imwrite(os.path.join(save_tracked_frames_folder + "/{}.jpg").format(frame_write), image_track)
 
         output_file.close()
         print("ID limit: {}".format(len(list(global_tracks))))
