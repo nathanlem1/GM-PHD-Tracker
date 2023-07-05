@@ -1,4 +1,4 @@
-# GM-PHD-Tracker
+# GM-PHD-Tracker - under construction!
 
 
 
@@ -36,7 +36,7 @@ If you use this code for your research, please cite our paper.
 ```
 @article{Nathanael_JVCI2021,
 author = {Nathanael L. Baisa},
-title = {Occlusion-robust online multi-object visual tracking using a GM-PHD filter with CNN-based re-identification},
+title = {Occlusion-robust online multi-object visual tracking using a {GM-PHD} filter with {CNN}-based re-identification},
 journal = {Journal of Visual Communication and Image Representation},
 volume = {80},
 pages = {103279},

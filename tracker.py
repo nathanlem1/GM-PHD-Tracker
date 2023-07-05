@@ -51,6 +51,7 @@ if __name__ == '__main__':
     appearance_weight = config['tracking']['appearance_weight']
     window_ReId = config['tracking']['window_ReId']
     feature_extraction_stage_type = config['tracking']['feature_extraction_stage_type']
+    is_batch_feature_extraction = config['tracking']['is_batch_feature_extraction']
     use_Jmax = config['tracking']['use_Jmax']
     is_AddOn_prediction = config['tracking']['is_AddOn_prediction']
     include_appearance = config['tracking']['include_appearance']
@@ -150,18 +151,18 @@ if __name__ == '__main__':
         elif MOT_data_type == 6:  # HiEve
             seq_name = seq.split('.')[0]
             if phase == 'train':
-                video_filename = os.path.join(base_data, 'HiEve/HIE20/videos', seq)
+                sequence_name = os.path.join(base_data, 'HiEve/HIE20/videos', seq)
                 seq_dets = np.loadtxt(os.path.join(base_data, 'HiEve/public_detection_train/train', seq_name + '.txt'),
                                       delimiter=',')  # load detections
             else:  # if phase == 'test'
-                video_filename = os.path.join(base_data, 'HiEve/HIE20test/test', seq)
+                sequence_name = os.path.join(base_data, 'HiEve/HIE20test/test', seq)
                 seq_dets = np.loadtxt(os.path.join(base_data, 'HiEve/public_detection_test/test', seq_name + '.txt'),
                                       delimiter=',')  # load detections
             result_folder = os.path.join(base_result, 'HiEve')
             if not os.path.isdir(result_folder):
                 os.mkdir(result_folder)
             result_file = result_folder + '/' + seq + '.txt'
-            cap = cv2.VideoCapture(video_filename)
+            cap = cv2.VideoCapture(sequence_name)
         else:  # MOT_data_type == 2, 3 or 4
             data_folder = os.path.join(base_data, 'MOT17/%s/%s/det/det.txt')
             seq_dets = np.loadtxt(data_folder % (phase, seq), delimiter=',')  # load detections
@@ -251,14 +252,16 @@ if __name__ == '__main__':
                         Y = int(dets_cp[i, 3])
                         crop = image[y:Y, x:X, :]
 
-                        # Extract from each crop
-                        feats = feat_extractor.extract_features_image(crop)
-                        features_all.append(feats)
-
-                    #     # Or extract from batch of crops. If this fails due to memory issue, try the above one
-                    #     # (extracting from each crop), particularly for MOT20!
-                    #     crops.append(crop)
-                    # features_all = feat_extractor.extract_features_batch(crops)
+                        if not is_batch_feature_extraction:
+                            # Extract from each crop
+                            feats = feat_extractor.extract_features_image(crop)
+                            features_all.append(feats)
+                        else:
+                            # Or extract from batch of crops. If this fails due to memory issue, try the above one
+                            # (extracting from each crop), particularly for MOT20!
+                            crops.append(crop)
+                    if is_batch_feature_extraction:
+                        features_all = feat_extractor.extract_features_batch(crops)
 
                     dets_cp_Z[:, 2:4] -= dets_cp_Z[:, 0:2]  # convert [x1,y1,x2,y2] to [x1,y1,w,h]
                     dets_cp_Z[:, 0:2] += dets_cp_Z[:, 2:4]/2.0  # convert [x1,y1,w,h] to [xc,yc,w,h]
@@ -304,14 +307,16 @@ if __name__ == '__main__':
                         Y = int(dets_tm[i, 3])
                         crop = image[y:Y, x:X, :]
 
-                        # # Extract from each crop
-                        # feats = feat_extractor.extract_features_image(crop)
-                        # features_all.append(feats)
-
-                        # Or extract from batch of crops. If this fails due to memory issue, try the above one
-                        # (extracting from each crop), particularly for MOT20!
-                        crops.append(crop)
-                    features_all = feat_extractor.extract_features_batch(crops)
+                        if not is_batch_feature_extraction:
+                            # Extract from each crop
+                            feats = feat_extractor.extract_features_image(crop)
+                            features_all.append(feats)
+                        else:
+                            # Or extract from batch of crops. If this fails due to memory issue, try the above one
+                            # (extracting from each crop), particularly for MOT20!
+                            crops.append(crop)
+                    if is_batch_feature_extraction:
+                        features_all = feat_extractor.extract_features_batch(crops)
 
                     dets_tm[:, 2:4] -= dets_tm[:, 0:2]  # convert [x1,y1,x2,y2] to [x1,y1,w,h]
                     dets_tm[:, 0:2] += dets_tm[:, 2:4] / 2.0  # convert [x1,y1,w,h] to [xc,yc,w,h]
@@ -371,14 +376,16 @@ if __name__ == '__main__':
                         Y = im_height
                     crop = image[y:Y, x:X, :]
 
-                    # # Extract from each crop
-                    # features = feat_extractor.extract_features_image(crop)
-                    # estimates['feat'].append(features)
-
-                    # Or extract from batch of crops. If this fails due to memory issue, try the above one
-                    # (extracting from each crop), particularly for MOT20!
-                    crops.append(crop)
-                features_all = feat_extractor.extract_features_batch(crops)
+                    if not is_batch_feature_extraction:
+                        # Extract from each crop
+                        feats = feat_extractor.extract_features_image(crop)
+                        features_all.append(feats)
+                    else:
+                        # Or extract from batch of crops. If this fails due to memory issue, try the above one
+                        # (extracting from each crop), particularly for MOT20!
+                        crops.append(crop)
+                if is_batch_feature_extraction:
+                    features_all = feat_extractor.extract_features_batch(crops)
 
                 for f in range(len(estimates['m'])):
                     estimates['feat'].append(features_all[f])
