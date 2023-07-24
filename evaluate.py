@@ -11,7 +11,7 @@ import motmetrics.distances as mm_d
 import numpy as np
 
 
-class Detection:
+class DetectionWithID:
     def __init__(self, p_id, frame_num, left, top, right, bottom, score=None):
         self.p_id = p_id
         self.frame_num = int(frame_num)
@@ -92,7 +92,7 @@ def detections_from_ground_truth(f_name, data_type):
                 top = float(data[3])
                 right = float(data[4]) + left
                 bottom = float(data[5]) + top
-                detections.append(Detection(p_id, frame_num, left, top, right, bottom, data[6]))
+                detections.append(DetectionWithID(p_id, frame_num, left, top, right, bottom, data[6]))
             else:  # For HiEve
                 p_id = data[1]
                 frame_num = data[0]
@@ -100,7 +100,7 @@ def detections_from_ground_truth(f_name, data_type):
                 top = float(data[3])
                 right = float(data[4]) + left
                 bottom = float(data[5]) + top
-                detections.append(Detection(p_id, frame_num, left, top, right, bottom, data[6]))
+                detections.append(DetectionWithID(p_id, frame_num, left, top, right, bottom, data[6]))
 
         return detections
 
@@ -120,7 +120,7 @@ def detections_from_output_tracks(f_name):
             top = float(data[3])
             right = float(data[4]) + left
             bottom = float(data[5]) + top
-            detections.append(Detection(p_id, frame_num, left, top, right, bottom, data[6]))
+            detections.append(DetectionWithID(p_id, frame_num, left, top, right, bottom, data[6]))
 
         return detections
 
