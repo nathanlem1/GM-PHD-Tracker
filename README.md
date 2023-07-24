@@ -1,6 +1,6 @@
 # GM-PHD-Tracker
 This code implements the paper [Occlusion-robust online multi-object visual tracking using a GM-PHD filter with CNN-based re-identification](https://www.sciencedirect.com/science/article/pii/S1047320321001814); 
-however, we used different reid model for extracting deep feature representations in this implementation. 
+however, we used different reid model for extracting deep appearance representations in this implementation. 
 
 
 
@@ -31,23 +31,23 @@ used.
 
 ## Tracking Data 
 We used [MOT16](https://motchallenge.net/data/MOT16/), [MOT17](https://motchallenge.net/data/MOT17/), 
-[MOT20](https://motchallenge.net/data/MOT20/) and [[HiEve](http://humaninevents.org/) benchmark data sets. Download 
-these datasets and put them in `data` folder under the `GM-PHD-Tracker`.
+[MOT20](https://motchallenge.net/data/MOT20/) and [HiEve](http://humaninevents.org/) benchmark data sets. Download 
+these datasets from their corresponding links and put them in `data` folder under the `GM-PHD-Tracker`.
 
 
 ## Track
 To perfrom tracking, you need to download the reid model from 
-[here](https://drive.google.com/file/d/1XWXzfcSrE2ie9TSGlIqQEeFfXE2lMmDe/view?usp=drive_link) and put in `model` folder 
-under the `GM-PHD-Tracker`. Then run the following code on terminal:
+[here](https://drive.google.com/file/d/1XWXzfcSrE2ie9TSGlIqQEeFfXE2lMmDe/view?usp=drive_link) and put it in `model` 
+folder under the `GM-PHD-Tracker`. Then run the following code on terminal:
 
 `python tracker.py --base_data' ./data --base_result ./result ----reid_path ./model/reid_resnet34.pth --detections_type " "`
 
-There are two detection types to use: using MOT Challenge  and HiEve public detections OR YOLOv8 custom detections. 
+There are two detection types to use: using MOT Challenge and HiEve public detections OR YOLOv8 custom detections. 
 Please look into the code for more details.
 
 
 ## Evaluate
-To evaluate on MOT16, MOT17, MOT20 or HiEve train datasets, you can the following code on terminal:
+To evaluate on MOT16, MOT17, MOT20 or HiEve train datasets, you can run the following code on terminal:
 
 `python evaluate.py --base_data' ./data --base_result ./result`
 
