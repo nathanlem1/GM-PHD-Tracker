@@ -43,7 +43,7 @@ folder under the `GM-PHD-Tracker`. Then run the following code on terminal:
 `python tracker.py --base_data' ./data --base_result ./result ----reid_path ./model/reid_resnet34.pth --detections_type " "`
 
 There are two detection types to use: using MOT Challenge and HiEve public detections OR YOLOv8 custom detections. 
-Please look into the code for more details.
+Please look into the code for more details, particularly `config.yaml` for parameters setting.
 
 
 ## Evaluate
@@ -51,7 +51,7 @@ To evaluate on MOT16, MOT17, MOT20 or HiEve train datasets, you can run the foll
 
 `python evaluate.py --base_data' ./data --base_result ./result`
 
-Please look into the code for more details.
+Please look into the code for more details, particularly `config.yaml` for parameters setting.
 
 ## Citation
 
