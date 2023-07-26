@@ -1,6 +1,7 @@
 # GM-PHD-Tracker
 This code implements the paper [Occlusion-robust online multi-object visual tracking using a GM-PHD filter with CNN-based re-identification](https://www.sciencedirect.com/science/article/pii/S1047320321001814); 
-however, we used different reid model for extracting deep appearance representations in this implementation. 
+however, we used different reid model for extracting deep appearance representations in this implementation. In addition 
+to using MOT Challenge and HiEve public detections, an option to use YOLOv8 custom detections is also included.
 
 
 
