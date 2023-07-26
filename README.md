@@ -41,7 +41,7 @@ To perfrom tracking, you need to download the reid model from
 [here](https://drive.google.com/file/d/1XWXzfcSrE2ie9TSGlIqQEeFfXE2lMmDe/view?usp=drive_link) and put it in `model` 
 folder under the `GM-PHD-Tracker`. Then run the following code on terminal:
 
-`python tracker.py --base_data' ./data --base_result ./result ----reid_path ./model/reid_resnet34.pth --detections_type " "`
+`python tracker.py --base_data' ./data --base_result ./result ----reid_path ./model/reid_model.pth --detections_type " "`
 
 There are two detection types to use: using MOT Challenge and HiEve public detections OR YOLOv8 custom detections. 
 Please look into the code for more details, particularly `config.yaml` for parameters setting.

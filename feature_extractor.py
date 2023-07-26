@@ -106,7 +106,7 @@ class ResNet34(nn.Module):
 
 
 class FeatureExtractor:
-    def __init__(self, reid_model_weights='./model/reid_resnet34.pth'):
+    def __init__(self, reid_model_weights='./model/reid_model.pth'):
         self.weights_path = reid_model_weights
         self.model = ResNet34()
         self.model = torch.nn.DataParallel(self.model).to(device)
@@ -149,7 +149,7 @@ class FeatureExtractor:
 
 
 def main():
-    feature_extractor = FeatureExtractor("./model/reid_resnet34.pth")
+    feature_extractor = FeatureExtractor("./model/reid_model.pth")
     im = plt.imread("./person_crop.jpg")
     feats = feature_extractor.extract_features_image(im)
     print(feats.shape)  # (1, 512)
