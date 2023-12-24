@@ -33,7 +33,7 @@ used.
 ## Tracking Data 
 We used [MOT16](https://motchallenge.net/data/MOT16/), [MOT17](https://motchallenge.net/data/MOT17/), 
 [MOT20](https://motchallenge.net/data/MOT20/) and [HiEve](http://humaninevents.org/) benchmark data sets. Download 
-these datasets from their corresponding links and put them in `data` folder under the `GM-PHD-Tracker`.
+these datasets from their corresponding links and put them in `data` folder created under the `GM-PHD-Tracker` folder.
 
 
 ## Track
