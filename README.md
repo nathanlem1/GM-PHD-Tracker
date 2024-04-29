@@ -54,6 +54,10 @@ To evaluate on MOT16, MOT17, MOT20 or HiEve train datasets, you can run the foll
 
 Please look into the code for more details, particularly `config.yaml` for parameters setting.
 
+You can also use the official MOTChallenge evaluation code from [TrackEval](https://github.com/JonathonLuiten/TrackEval) 
+to evaluate the MOT16, MOT17, MOT20 or HiEve train datasets.
+
+
 ## Citation
 
 If you use this code for your research, please cite our paper.
