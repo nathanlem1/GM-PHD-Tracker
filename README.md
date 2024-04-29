@@ -48,7 +48,8 @@ Please look into the code for more details, particularly `config.yaml` for param
 
 
 ## Evaluate
-To evaluate on MOT16, MOT17, MOT20 or HiEve train datasets, you can run the following code on terminal:
+To evaluate on MOT16, MOT17, MOT20 or HiEve train datasets, you can run the following code on terminal (which uses 
+[py-motmetrics](https://github.com/cheind/py-motmetrics)):
 
 `python evaluate.py --base_data' ./data --base_result ./result`
 
