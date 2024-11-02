@@ -33,7 +33,7 @@ used.
 ## Tracking Data 
 We used [MOT16](https://motchallenge.net/data/MOT16/), [MOT17](https://motchallenge.net/data/MOT17/), 
 [MOT20](https://motchallenge.net/data/MOT20/), [HiEve](http://humaninevents.org/) and [DanceTrack](https://github.com/DanceTrack/DanceTrack) 
-benchmark data sets. Download these datasets from their corresponding links and put them in `data` folder created under the 
+benchmark data sets. Download these datasets from their corresponding links and put them in `datasets` folder created under the 
 `GM-PHD-Tracker` folder.
 
 
@@ -42,7 +42,7 @@ To perfrom tracking, you need to download the reid model from
 [here](https://drive.google.com/file/d/1XWXzfcSrE2ie9TSGlIqQEeFfXE2lMmDe/view?usp=drive_link) and put it in `model` 
 folder under the `GM-PHD-Tracker`. Then run the following code on terminal:
 
-`python tracker.py --base_data' ./data --base_result ./result ----reid_path ./model/reid_model.pth --detections_type " "`
+`python tracker.py --base_data' ./datasets --base_result ./results ----reid_path ./model/reid_model.pth --detections_type " "`
 
 There are two detection types to use: using MOT Challenge and HiEve public detections OR YOLOv8 custom detections. 
 Please look into the code for more details, particularly `config.yaml` for parameters setting.
@@ -52,7 +52,7 @@ Please look into the code for more details, particularly `config.yaml` for param
 To evaluate on MOT16, MOT17, MOT20 or HiEve train datasets, you can run the following code on terminal (which uses 
 [py-motmetrics](https://github.com/cheind/py-motmetrics)):
 
-`python evaluate.py --base_data' ./data --base_result ./result`
+`python evaluate.py --base_data' ./datasets --base_result ./results`
 
 Please look into the code for more details, particularly `config.yaml` for parameters setting.
 

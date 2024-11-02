@@ -22,7 +22,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Tracking pipeline for GM-PHD-Tracker.')
     parser.add_argument('--base_data', type=str, default='./datasets',
                         help="Path to base tracking data folder.")
-    parser.add_argument('--base_result', type=str, default='./result',
+    parser.add_argument('--base_result', type=str, default='./results',
                         help='Path to base tracking result folder to be saved to.')
     parser.add_argument('--reid_path', type=str, default='./model/reid_model.pth',
                         help='Path to reid model.')
