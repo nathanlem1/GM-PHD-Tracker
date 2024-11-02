@@ -34,7 +34,7 @@ tracking:
     # for track-to-estimate association.
 
     include_ReId: True   # Set to True for using ReId or to False for not using ReId.
-    display_tracks: False
+    display_tracks: True
     display_trajectories: False
     save_tracked_frames: False
 

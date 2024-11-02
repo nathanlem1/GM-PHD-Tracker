@@ -22,7 +22,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Tracking pipeline for GM-PHD-Tracker.')
     parser.add_argument('--base_data', type=str, default='./datasets',
                         help="Path to base tracking data folder.")
-    parser.add_argument('--base_result', type=str, default='./results',
+    parser.add_argument('--base_result', type=str, default='./results/trackers',
                         help='Path to base tracking result folder to be saved to.')
     parser.add_argument('--reid_path', type=str, default='./model/reid_model.pth',
                         help='Path to reid model.')
@@ -161,22 +161,24 @@ if __name__ == '__main__':
 
         print('Sequence:', seq)
         print('Phase: ', phase)
+        path_extension = 'GMPHD/data'
 
         if MOT_data_type == 'MOT16':
             data_folder = os.path.join(base_data, 'MOT16/%s/%s/det/det.txt')
             seq_dets = np.loadtxt(data_folder % (phase, seq), delimiter=',')  # load detections
             MAX_FRAMES = int(seq_dets[:, 0].max())
-            result_folder = os.path.join(base_result, 'MOT16')
+            # result_folder = os.path.join(base_result, 'MOT16')
+            result_folder = os.path.join(base_result, 'MOT16'+'-'+phase, path_extension)
             if not os.path.isdir(result_folder):
-                os.mkdir(result_folder)
+                os.makedirs(result_folder)  # os.mkdir(result_folder)
             result_file = result_folder + '/' + seq + '.txt'
         elif MOT_data_type == 'MOT20':
             data_folder = os.path.join(base_data, 'MOT20/%s/%s/det/det.txt')
             seq_dets = np.loadtxt(data_folder % (phase, seq), delimiter=',')  # load detections
             MAX_FRAMES = int(seq_dets[:, 0].max())
-            result_folder = os.path.join(base_result, 'MOT20')
+            result_folder = os.path.join(base_result, 'MOT20'+'-'+phase, path_extension)
             if not os.path.isdir(result_folder):
-                os.mkdir(result_folder)
+                os.makedirs(result_folder)
             result_file = result_folder + '/' + seq + '.txt'
         elif MOT_data_type == 'HiEve':
             seq_name = seq.split('.')[0]
@@ -190,26 +192,26 @@ if __name__ == '__main__':
                 seq_dets = np.loadtxt(os.path.join(base_data, 'HiEve/public_detection_test/test', seq_name + '.txt'),
                                       delimiter=',')  # load detections
                 MAX_FRAMES = int(seq_dets[:, 0].max())
-            result_folder = os.path.join(base_result, 'HiEve')
+            result_folder = os.path.join(base_result, 'HiEve'+'-'+phase, path_extension)
             if not os.path.isdir(result_folder):
-                os.mkdir(result_folder)
+                os.makedirs(result_folder)
             result_file = result_folder + '/' + seq + '.txt'
             cap = cv2.VideoCapture(sequence_name)
         elif MOT_data_type == 'DanceTrack':
             data_folder = os.path.join(base_data, 'DanceTrack/%s/%s/%s/')
             data_pth = data_folder % (phase, seq, 'img1')
             MAX_FRAMES = len(os.listdir(data_pth))
-            result_folder = os.path.join(base_result, 'DanceTrack')
+            result_folder = os.path.join(base_result, 'DanceTrack'+'-'+phase, path_extension)
             if not os.path.isdir(result_folder):
-                os.mkdir(result_folder)
+                os.makedirs(result_folder)
             result_file = result_folder + '/' + seq + '.txt'
         else:  # MOT_data_type == 'MOT17-DPM', 'MOT17-FRCNN' or 'MOT17-SDP'
             data_folder = os.path.join(base_data, 'MOT17/%s/%s/det/det.txt')
             seq_dets = np.loadtxt(data_folder % (phase, seq), delimiter=',')  # load detections
             MAX_FRAMES = int(seq_dets[:, 0].max())
-            result_folder = os.path.join(base_result, 'MOT17')
+            result_folder = os.path.join(base_result, 'MOT17'+'-'+phase, path_extension)
             if not os.path.isdir(result_folder):
-                os.mkdir(result_folder)
+                os.makedirs(result_folder)
             result_file = result_folder + '/' + seq + '.txt'
 
         print(f'Maximum frame of {seq} is {MAX_FRAMES}.')
