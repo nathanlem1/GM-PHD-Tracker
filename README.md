@@ -20,7 +20,7 @@ terms of tracking accuracy and identification.
 
 The qualitative result (demo) of the GM-PHD-Tracker on MOT17-03 data with a SDP public detections is shown below. 
 
-![](./results/demo_MOT17_03_SDP.gif)
+![](./assets/demo_MOT17_03_SDP.gif)
 
 
 
