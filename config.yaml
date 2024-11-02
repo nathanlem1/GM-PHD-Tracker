@@ -7,10 +7,10 @@ detection:
 # Parameters for tracking
 tracking:
     motion_model_type: cv   # cv for constant velocity, rw for random walk
-    MOT_data_type: 1  # Set to 1 for MOT16, to 2 for MOT17-DPM, to 3 for MOT17-FRCNN or to 4 for MOT17-SDP or 5 for
-    # MOT20 or 6 for HiEve.
+    MOT_data_type: 'MOT16'  # Set to 'MOT16', 'MOT17-DPM', 'MOT17-FRCNN', 'MOT17-SDP', 'MOT20', 'HiEve' or 'DanceTrack'.
 
-    train_test_type: 1  # Set to 1 for Training data or to 2 for Test data
+    train_test_type: 'train'  # Set to 'train' or to 'test'
+    is_DanceTrack_val: False  # Set to True for DanceTrack validation or to False for DanceTrack train
 
     similarity_threshold: 0.2  # For data association (0.2 gives better result than 0.4)
     prediction_time_threshold: 3  # 5, 10 #  After this time of predictions, don't save and display the track information
@@ -34,7 +34,7 @@ tracking:
     # for track-to-estimate association.
 
     include_ReId: True   # Set to True for using ReId or to False for not using ReId.
-    display_tracks: True
+    display_tracks: False
     display_trajectories: False
     save_tracked_frames: False
 

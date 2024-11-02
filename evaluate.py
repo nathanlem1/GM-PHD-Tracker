@@ -150,7 +150,7 @@ def get_distance_matrix_box(gt_frame, track_frame):
 # Calculate the MOT metrics
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Tracking pipeline for GM-PHD-Tracker.')
-    parser.add_argument('--base_data', type=str, default='./data',
+    parser.add_argument('--base_data', type=str, default='./datasets',
                         help="Path to base tracking data folder.")
     parser.add_argument('--base_result', type=str, default='./result',
                         help='Path to base tracking result folder to be saved to.')
@@ -161,41 +161,58 @@ if __name__ == '__main__':
     with open('config.yaml', 'r') as stream:
         config = yaml.load(stream, Loader=yaml.FullLoader)
     MOT_data_type = config['tracking']['MOT_data_type']  # We can only evaluate train sequence of each data type.
+    is_DanceTrack_val = config['tracking']['is_DanceTrack_val']
     base_data = args.base_data
     base_result = args.base_result
 
-    if MOT_data_type == 1:
+    if MOT_data_type == 'MOT16':
         data_type = 'MOT16'
         phase = 'train'
         sequences = ['MOT16-02', 'MOT16-04', 'MOT16-05', 'MOT16-09', 'MOT16-10', 'MOT16-11', 'MOT16-13']
-    elif MOT_data_type == 2:
+    elif MOT_data_type == 'MOT17-DPM':
         data_type = 'MOT17'
         phase = 'train'
         sequences = ['MOT17-02-DPM', 'MOT17-04-DPM', 'MOT17-05-DPM', 'MOT17-09-DPM', 'MOT17-10-DPM', 'MOT17-11-DPM',
                      'MOT17-13-DPM']
-    elif MOT_data_type == 3:
+    elif MOT_data_type == 'MOT17-FRCNN':
         data_type = 'MOT17'
         phase = 'train'
         sequences = ['MOT17-02-FRCNN', 'MOT17-04-FRCNN', 'MOT17-05-FRCNN', 'MOT17-09-FRCNN', 'MOT17-10-FRCNN',
                      'MOT17-11-FRCNN', 'MOT17-13-FRCNN']
-    elif MOT_data_type == 4:
+    elif MOT_data_type == 'MOT17-SDP':
         data_type = 'MOT17'
         phase = 'train'
         sequences = ['MOT17-02-SDP', 'MOT17-04-SDP', 'MOT17-05-SDP', 'MOT17-09-SDP', 'MOT17-10-SDP', 'MOT17-11-SDP',
                      'MOT17-13-SDP']
-    elif MOT_data_type == 5:
+    elif MOT_data_type == 'MOT20':
         data_type = 'MOT20'
         phase = 'train'
         sequences = ['MOT20-01', 'MOT20-02', 'MOT20-03', 'MOT20-05']
-    elif MOT_data_type == 6:
+    elif MOT_data_type == 'HiEve':
         data_type = 'HiEve'
         phase = 'train'
         sequences = ['1.mp4', '2.mp4', '3.mp4', '4.mp4', '5.mp4', '6.MP4', '7.mp4', '8.mp4', '9.mp4', '10.MOV',
                      '11.mp4', '12.mp4', '13.mp4', '14.mp4', '15.mp4', '16.mp4', '17.mp4', '18.MOV', '19.mp4']
+    elif MOT_data_type == 'DanceTrack':
+        data_type = 'DanceTrack'
+        phase = 'train'
+        if is_DanceTrack_val:
+            phase = 'val'
+            sequences = ['dancetrack0004', 'dancetrack0005', 'dancetrack0007', 'dancetrack0010', 'dancetrack0014', 'dancetrack0018',
+                         'dancetrack0019', 'dancetrack0025', 'dancetrack0026', 'dancetrack0030', 'dancetrack0034', 'dancetrack0035',
+                         'dancetrack0041', 'dancetrack0043', 'dancetrack0047', 'dancetrack0058', 'dancetrack0063', 'dancetrack0065',
+                         'dancetrack0073', 'dancetrack0077', 'dancetrack0079', 'dancetrack0081', 'dancetrack0090', 'dancetrack0094']            # dancetrack0097
+        else:
+            sequences = ['dancetrack0001', 'dancetrack0002', 'dancetrack0006', 'dancetrack0008', 'dancetrack0012', 'dancetrack0015',
+                         'dancetrack0016', 'dancetrack0020', 'dancetrack0023', 'dancetrack0024','dancetrack0027', 'dancetrack0029',
+                         'dancetrack0032', 'dancetrack0033', 'dancetrack0037', 'dancetrack0039', 'dancetrack0044', 'dancetrack0045',
+                         'dancetrack0049', 'dancetrack0051', 'dancetrack0052', 'dancetrack0053', 'dancetrack0055', 'dancetrack0057',
+                         'dancetrack0061', 'dancetrack0062', 'dancetrack0066', 'dancetrack0068', 'dancetrack0069', 'dancetrack0072',
+                         'dancetrack0074', 'dancetrack0075', 'dancetrack0080', 'dancetrack0082', 'dancetrack0083', 'dancetrack0086',
+                         'dancetrack0087', 'dancetrack0096', 'dancetrack0098', 'dancetrack0099']
     else:
-        print('\nError: Set to correct MOT dataset: Set to 1 for MOT16, to 2 for MOT17-DPM, to 3 for MOT17-FRCNN, to 4 '
-              'for MOT17-SDP, to 5 for MOT20 or to 6 for HiEve.')
-        exit()
+        raise NameError('Set to correct MOT dataset: Set to MOT16, MOT17-DPM, MOT17-FRCNN, MOT17-SDP, MOT20, HiEve or '
+                        'DanceTrack (look into config.yaml).')
 
     fn_use_gt = detections_from_ground_truth
     fn_use_output_tracks = detections_from_output_tracks
@@ -206,7 +223,7 @@ if __name__ == '__main__':
         tracks_file = path.join(base_result + '/' + data_type, sequence_name + '.txt')   # tracks output file
 
         if path.isfile(tracks_file):
-            if MOT_data_type == 6:  # HiEve
+            if MOT_data_type == 'HiEve':  # HiEve
                 gt_file = path.join(base_data + '/' + data_type + '/HIE20/labels/track1',
                                     sequence_name.split('.')[0] + '.txt')  # ground-truth file
             else:

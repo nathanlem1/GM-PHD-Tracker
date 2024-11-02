@@ -20,13 +20,13 @@ np.random.seed(5)  # For reproducibility
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Tracking pipeline for GM-PHD-Tracker.')
-    parser.add_argument('--base_data', type=str, default='./data',
+    parser.add_argument('--base_data', type=str, default='./datasets',
                         help="Path to base tracking data folder.")
     parser.add_argument('--base_result', type=str, default='./result',
                         help='Path to base tracking result folder to be saved to.')
     parser.add_argument('--reid_path', type=str, default='./model/reid_model.pth',
                         help='Path to reid model.')
-    parser.add_argument('--detections_type', type=str, default=" ",
+    parser.add_argument('--detections_type', type=str, default="yolo",
                         help='Type of detections to use: set to "yolo" for YOLOv8 custom detections or set to " " for '
                              'MOT Challenge and HiEve public detections.')
 
@@ -44,6 +44,7 @@ if __name__ == '__main__':
     motion_model_type = config['tracking']['motion_model_type']
     MOT_data_type = config['tracking']['MOT_data_type']
     train_test_type = config['tracking']['train_test_type']
+    is_DanceTrack_val = config['tracking']['is_DanceTrack_val']
     similarity_threshold = config['tracking']['similarity_threshold']
     prediction_time_threshold = config['tracking']['prediction_time_threshold']
     track_kill_time_threshold = config['tracking']['track_kill_time_threshold']
@@ -70,15 +71,15 @@ if __name__ == '__main__':
         detector.to(device)
     feat_extractor = FeatureExtractor(reid_path)  # Features extraction using pre-trained ResNet34.
 
-    if MOT_data_type == 1:
-        if train_test_type == 1:
+    if MOT_data_type == 'MOT16':
+        if train_test_type == 'train':
             phase = 'train'
             sequences = ['MOT16-02', 'MOT16-04', 'MOT16-05', 'MOT16-09', 'MOT16-10', 'MOT16-11', 'MOT16-13']
         else:
             phase = 'test'
             sequences = ['MOT16-01', 'MOT16-03', 'MOT16-06', 'MOT16-07', 'MOT16-08', 'MOT16-12', 'MOT16-14']
-    elif MOT_data_type == 2:
-        if train_test_type == 1:
+    elif MOT_data_type == 'MOT17-DPM':
+        if train_test_type == 'train':
             phase = 'train'
             sequences = ['MOT17-02-DPM', 'MOT17-04-DPM', 'MOT17-05-DPM', 'MOT17-09-DPM', 'MOT17-10-DPM', 'MOT17-11-DPM',
                          'MOT17-13-DPM']
@@ -86,8 +87,8 @@ if __name__ == '__main__':
             phase = 'test'
             sequences = ['MOT17-01-DPM', 'MOT17-03-DPM', 'MOT17-06-DPM', 'MOT17-07-DPM', 'MOT17-08-DPM', 'MOT17-12-DPM',
                          'MOT17-14-DPM']
-    elif MOT_data_type == 3:
-        if train_test_type == 1:
+    elif MOT_data_type == 'MOT17-FRCNN':
+        if train_test_type == 'train':
             phase = 'train'
             sequences = ['MOT17-02-FRCNN', 'MOT17-04-FRCNN', 'MOT17-05-FRCNN', 'MOT17-09-FRCNN', 'MOT17-10-FRCNN',
                          'MOT17-11-FRCNN', 'MOT17-13-FRCNN']
@@ -96,8 +97,8 @@ if __name__ == '__main__':
             sequences = ['MOT17-01-FRCNN', 'MOT17-03-FRCNN', 'MOT17-06-FRCNN', 'MOT17-07-FRCNN', 'MOT17-08-FRCNN',
                          'MOT17-12-FRCNN', 'MOT17-14-FRCNN']
         overlap_thresh = 0.5
-    elif MOT_data_type == 4:
-        if train_test_type == 1:
+    elif MOT_data_type == 'MOT17-SDP':
+        if train_test_type == 'train':
             phase = 'train'
             sequences = ['MOT17-02-SDP', 'MOT17-04-SDP', 'MOT17-05-SDP', 'MOT17-09-SDP', 'MOT17-10-SDP', 'MOT17-11-SDP',
                          'MOT17-13-SDP']
@@ -106,16 +107,16 @@ if __name__ == '__main__':
             sequences = ['MOT17-01-SDP', 'MOT17-03-SDP', 'MOT17-06-SDP', 'MOT17-07-SDP', 'MOT17-08-SDP', 'MOT17-12-SDP',
                          'MOT17-14-SDP']
         overlap_thresh = 0.5
-    elif MOT_data_type == 5:
-        if train_test_type == 1:
+    elif MOT_data_type == 'MOT20':
+        if train_test_type == 'train':
             phase = 'train'
             sequences = ['MOT20-01', 'MOT20-02', 'MOT20-03', 'MOT20-05']
         else:
             phase = 'test'
             sequences = ['MOT20-04', 'MOT20-06', 'MOT20-07', 'MOT20-08']
         overlap_thresh = 0.5
-    elif MOT_data_type == 6:
-        if train_test_type == 1:
+    elif MOT_data_type == 'HiEve':
+        if train_test_type == 'train':
             phase = 'train'
             sequences = ['1.mp4', '2.mp4', '3.mp4', '4.mp4', '5.mp4', '6.MP4', '7.mp4', '8.mp4', '9.mp4', '10.MOV',
                          '11.mp4', '12.mp4', '13.mp4', '14.mp4', '15.mp4', '16.mp4', '17.mp4', '18.MOV', '19.mp4']
@@ -124,52 +125,94 @@ if __name__ == '__main__':
             sequences = ['20.mp4', '21.mp4', '22.mp4', '23.mp4', '24.mp4', '25.MOV', '26.mp4', '27.mp4', '28.mp4',
                          '29.mp4', '30.mp4', '31.mp4', '32.mp4']
         overlap_thresh = 0.5
+    elif MOT_data_type == 'DanceTrack':
+        if train_test_type == 'train':
+            phase = 'train'
+            if is_DanceTrack_val:
+                phase = 'val'
+                sequences = ['dancetrack0004', 'dancetrack0005', 'dancetrack0007', 'dancetrack0010', 'dancetrack0014', 'dancetrack0018',
+                             'dancetrack0019', 'dancetrack0025', 'dancetrack0026', 'dancetrack0030', 'dancetrack0034', 'dancetrack0035',
+                             'dancetrack0041', 'dancetrack0043', 'dancetrack0047', 'dancetrack0058', 'dancetrack0063', 'dancetrack0065',
+                             'dancetrack0073', 'dancetrack0077', 'dancetrack0079', 'dancetrack0081', 'dancetrack0090', 'dancetrack0094',
+                             'dancetrack0097']
+            else:
+                sequences = ['dancetrack0001', 'dancetrack0002', 'dancetrack0006', 'dancetrack0008', 'dancetrack0012', 'dancetrack0015',
+                             'dancetrack0016', 'dancetrack0020', 'dancetrack0023', 'dancetrack0024','dancetrack0027', 'dancetrack0029',
+                             'dancetrack0032', 'dancetrack0033', 'dancetrack0037', 'dancetrack0039', 'dancetrack0044', 'dancetrack0045',
+                             'dancetrack0049', 'dancetrack0051', 'dancetrack0052', 'dancetrack0053', 'dancetrack0055', 'dancetrack0057',
+                             'dancetrack0061', 'dancetrack0062', 'dancetrack0066', 'dancetrack0068', 'dancetrack0069', 'dancetrack0072',
+                             'dancetrack0074', 'dancetrack0075', 'dancetrack0080', 'dancetrack0082', 'dancetrack0083', 'dancetrack0086',
+                             'dancetrack0087', 'dancetrack0096', 'dancetrack0098', 'dancetrack0099']
+        else:
+            phase = 'test'
+            sequences = ['dancetrack0003', 'dancetrack0009', 'dancetrack0011', 'dancetrack0013', 'dancetrack0017', 'dancetrack0021',
+                         'dancetrack0022', 'dancetrack0028','dancetrack0031', 'dancetrack0036', 'dancetrack0038', 'dancetrack0040',
+                         'dancetrack0042', 'dancetrack0046', 'dancetrack0048', 'dancetrack0050', 'dancetrack0054', 'dancetrack0056',
+                         'dancetrack0059', 'dancetrack0060', 'dancetrack0064', 'dancetrack0067', 'dancetrack0070', 'dancetrack0071',
+                         'dancetrack0076', 'dancetrack0078', 'dancetrack0084', 'dancetrack0085', 'dancetrack0088', 'dancetrack0089',
+                         'dancetrack0091', 'dancetrack0092', 'dancetrack0093', 'dancetrack0095', 'dancetrack0100']
+        overlap_thresh = 0.5
     else:
-        print('\nError: Set to correct MOT dataset: Set to 1 for MOT16, to 2 for MOT17-DPM, to 3 for MOT17-FRCNN, to 4 '
-              'for MOT17-SDP, to 5 for MOT20 or to 6 for HiEve.')
-        exit()
+        raise NameError('Set to correct MOT dataset: Set to MOT16, MOT17-DPM, MOT17-FRCNN, MOT17-SDP, MOT20, HiEve or '
+                        'DanceTrack (look into config.yaml).')
 
     # Tracking starts here.
     for seq in sequences:
 
         print('Sequence:', seq)
+        print('Phase: ', phase)
 
-        if MOT_data_type == 1:
+        if MOT_data_type == 'MOT16':
             data_folder = os.path.join(base_data, 'MOT16/%s/%s/det/det.txt')
             seq_dets = np.loadtxt(data_folder % (phase, seq), delimiter=',')  # load detections
+            MAX_FRAMES = int(seq_dets[:, 0].max())
             result_folder = os.path.join(base_result, 'MOT16')
             if not os.path.isdir(result_folder):
                 os.mkdir(result_folder)
             result_file = result_folder + '/' + seq + '.txt'
-        elif MOT_data_type == 5:
+        elif MOT_data_type == 'MOT20':
             data_folder = os.path.join(base_data, 'MOT20/%s/%s/det/det.txt')
             seq_dets = np.loadtxt(data_folder % (phase, seq), delimiter=',')  # load detections
+            MAX_FRAMES = int(seq_dets[:, 0].max())
             result_folder = os.path.join(base_result, 'MOT20')
             if not os.path.isdir(result_folder):
                 os.mkdir(result_folder)
             result_file = result_folder + '/' + seq + '.txt'
-        elif MOT_data_type == 6:  # HiEve
+        elif MOT_data_type == 'HiEve':
             seq_name = seq.split('.')[0]
             if phase == 'train':
                 sequence_name = os.path.join(base_data, 'HiEve/HIE20/videos', seq)
                 seq_dets = np.loadtxt(os.path.join(base_data, 'HiEve/public_detection_train/train', seq_name + '.txt'),
                                       delimiter=',')  # load detections
+                MAX_FRAMES = int(seq_dets[:, 0].max())
             else:  # if phase == 'test'
                 sequence_name = os.path.join(base_data, 'HiEve/HIE20test/test', seq)
                 seq_dets = np.loadtxt(os.path.join(base_data, 'HiEve/public_detection_test/test', seq_name + '.txt'),
                                       delimiter=',')  # load detections
+                MAX_FRAMES = int(seq_dets[:, 0].max())
             result_folder = os.path.join(base_result, 'HiEve')
             if not os.path.isdir(result_folder):
                 os.mkdir(result_folder)
             result_file = result_folder + '/' + seq + '.txt'
             cap = cv2.VideoCapture(sequence_name)
-        else:  # MOT_data_type == 2, 3 or 4
+        elif MOT_data_type == 'DanceTrack':
+            data_folder = os.path.join(base_data, 'DanceTrack/%s/%s/%s/')
+            data_pth = data_folder % (phase, seq, 'img1')
+            MAX_FRAMES = len(os.listdir(data_pth))
+            result_folder = os.path.join(base_result, 'DanceTrack')
+            if not os.path.isdir(result_folder):
+                os.mkdir(result_folder)
+            result_file = result_folder + '/' + seq + '.txt'
+        else:  # MOT_data_type == 'MOT17-DPM', 'MOT17-FRCNN' or 'MOT17-SDP'
             data_folder = os.path.join(base_data, 'MOT17/%s/%s/det/det.txt')
             seq_dets = np.loadtxt(data_folder % (phase, seq), delimiter=',')  # load detections
+            MAX_FRAMES = int(seq_dets[:, 0].max())
             result_folder = os.path.join(base_result, 'MOT17')
             if not os.path.isdir(result_folder):
                 os.mkdir(result_folder)
             result_file = result_folder + '/' + seq + '.txt'
+
+        print(f'Maximum frame of {seq} is {MAX_FRAMES}.')
 
         # Initialize pruned_intensity for GM-PHD-Filter.
         pruned_intensity = dict()
@@ -189,25 +232,32 @@ if __name__ == '__main__':
         output_file = open(result_file, 'w')
         start_time = timer()
 
-        for frame in range(int(seq_dets[:, 0].max())):
+        for frame in range(MAX_FRAMES):
             frame += 1  # detection and frame numbers begin at 1.
             print('frame: ', frame)
 
-            if MOT_data_type == 1:
+            if MOT_data_type == 'MOT16':
                 fn = os.path.join(base_data, 'MOT16/%s/%s/img1/%06d.jpg') % (phase, seq, frame)
                 image = cv2.imread(fn)
-            elif MOT_data_type == 5:
+            elif MOT_data_type == 'MOT20':
                 fn = os.path.join(base_data, 'MOT20/%s/%s/img1/%06d.jpg') % (phase, seq, frame)
                 image = cv2.imread(fn)
-            elif MOT_data_type == 6:  # HiEve
+            elif MOT_data_type == 'HiEve':
                 ret, image = cap.read()
-            else:  # MOT_data_type == 2, 3 or 4
+            elif MOT_data_type == 'DanceTrack':
+                fn = os.path.join(base_data, 'DanceTrack/%s/%s/img1/%08d.jpg') % (phase, seq, frame)
+                image = cv2.imread(fn)
+            else:  # MOT_data_type == 'MOT17-DPM', 'MOT17-FRCNN', or 'MOT17-SDP'
                 fn = os.path.join(base_data, 'MOT17/%s/%s/img1/%06d.jpg') % (phase, seq, frame)
                 image = cv2.imread(fn)
 
             image_track = copy.deepcopy(image)
 
             if detections_type != 'yolo':             # Use MOT challenge public detections
+                if MOT_data_type == 'DanceTrack':
+                    raise NameError('DanceTrack has no public detections. It only works with custom detections. Hence, '
+                                    'set detections_type to "yolo" to run the tracker on this dataset.')
+
                 detections = seq_dets[seq_dets[:, 0] == frame, 2:7]
                 if MOT_data_type == 1:
                     if seq == 'MOT16-03' or seq == 'MOT16-04':  # For MOT16-03 and MOT16-04, particularly for DPM
