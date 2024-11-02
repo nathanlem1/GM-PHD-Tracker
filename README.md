@@ -57,7 +57,11 @@ To evaluate on MOT16, MOT17, MOT20 or HiEve train datasets, you can run the foll
 Please look into the code for more details, particularly `config.yaml` for parameters setting.
 
 You can also use the official MOTChallenge evaluation code from [TrackEval](https://github.com/JonathonLuiten/TrackEval) 
-to evaluate the MOT16, MOT17, MOT20 or HiEve train datasets.
+to evaluate the MOT16, MOT17, MOT20, HiEve and DanceTrack `train` datasets. DanceTrack also has `val` dataset, in which 
+case you need to use `val` for `--SPLIT_TO_EVAL`.
+
+`python TrackEval/scripts/run_mot_challenge.py --BENCHMARK DanceTrack --SPLIT_TO_EVAL train --TRACKERS_TO_EVAL GMPHD --METRICS HOTA CLEAR Identity VACE --GT_FOLDER results/gt/ --TRACKERS_FOLDER results/trackers/ --USE_PARALLEL False --NUM_PARALLEL_CORES 1`
+
 
 
 ## Citation
