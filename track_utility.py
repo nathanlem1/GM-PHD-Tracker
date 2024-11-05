@@ -19,6 +19,14 @@ use_iou = config['tracking']['use_iou']
 reid_threshold = config['tracking']['reid_threshold']
 
 
+def xcycwh_to_x1y1x2y2(xc, yc, w, h):
+    x1 = xc - w / 2.0  # x1 = x
+    y1 = yc - h / 2.0  # y1 = y
+    x2 = x1 + w        # x2 = X
+    y2 = y1 + h        # x2 = Y
+    return x1, y1, x2, y2
+
+
 def cosine_distance(features1, features2):
     dot_product_f1f2 = np.dot(features1, features2.T)
     norm_feat1 = np.linalg.norm(features1)
@@ -165,14 +173,8 @@ def compute_associations(image, active_tracks, estimates_m, estimates_feat, incl
                     h_tra = active_tracks[track_list[track_index]].m_k[3][0]
                     w_est = estimates_m[estId][2][0]
                     h_est = estimates_m[estId][3][0]
-                x_tra = xc_tra -w_tra/2.0
-                y_tra = yc_tra - h_tra/2.0
-                X_tra = x_tra + w_tra
-                Y_tra = y_tra + h_tra
-                x_est = xc_est - w_est/2.0
-                y_est = yc_est - h_est/2.0
-                X_est = x_est + w_est
-                Y_est = y_est + h_est
+                x_tra, y_tra, X_tra, Y_tra = xcycwh_to_x1y1x2y2(xc_tra, yc_tra, w_tra, h_tra)
+                x_est, y_est, X_est, Y_est = xcycwh_to_x1y1x2y2(xc_est, yc_est, w_est, h_est)
                 bb_tra = np.array([x_tra, y_tra, X_tra, Y_tra])
                 bb_est = np.array([x_est, y_est, X_est, Y_est])
                 iou = bb_iou(bb_tra, bb_est)

@@ -13,7 +13,7 @@ from ultralytics import YOLO
 from GM_PHD_Filter import GM_PHD_Filter
 from feature_extractor import FeatureExtractor
 from track_utility import nms_score_mot, constrain_detections_inFrame, create_new_track, compute_associations, \
-    addOn_prediction
+    addOn_prediction, xcycwh_to_x1y1x2y2
 
 np.random.seed(5)  # For reproducibility
 
@@ -26,7 +26,7 @@ if __name__ == '__main__':
                         help='Path to base tracking result folder to be saved to.')
     parser.add_argument('--reid_path', type=str, default='./pretrained/reid_model.pth',
                         help='Path to reid model.')
-    parser.add_argument('--detections_type', type=str, default="yolo",
+    parser.add_argument('--detections_type', type=str, default=" ",
                         help='Type of detections to use: set to "yolo" for YOLOv8 custom detections or set to " " for '
                              'MOT Challenge and HiEve public detections.')
 
@@ -414,10 +414,9 @@ if __name__ == '__main__':
                     else:
                         w = estimates['m'][i][2][0]
                         h = estimates['m'][i][3][0]
-                    x = int(xc - w/2.0)
-                    y = int(yc - h/2.0)
-                    X = int(x + w)
-                    Y = int(y + h)
+
+                    x, y, X, Y = xcycwh_to_x1y1x2y2(xc, yc, w, h)
+                    x, y, X, Y = int(x), int(y), int(X), int(Y)
                     if x < 0:
                         x = 0
                     if y < 0:
@@ -567,11 +566,8 @@ if __name__ == '__main__':
                         else:
                             w = track_ky.m_k[2][0]
                             h = track_ky.m_k[3][0]
-                        x1 = int(xc - w / 2.0)
-                        y1 = int(yc - h / 2.0)
-                        x2 = int(x1 + w)
-                        y2 = int(y1 + h)
 
+                        x1, y1, x2, y2 = xcycwh_to_x1y1x2y2(xc, yc, w, h)
                         if x1 > im_width or y1 > im_height or x2 < 0 or y2 < 0:  # If the track bounding box is out of
                             # the scene.
                             archived_tracks[ky] = active_tracks[ky]
@@ -610,13 +606,12 @@ if __name__ == '__main__':
                     h = active_tracks[trackId].m_k[3][0]
                     vcx = 0.0
                     vcy = 0.0
-                x1 = int(xc - w/2.0)
-                y1 = int(yc - h/2.0)
-                x2 = int(x1 + w)
-                y2 = int(y1 + h)
-                conf = active_tracks[trackId].scores[-1]  # Detection confidence, take the last one!
 
+                x1, y1, x2, y2 = xcycwh_to_x1y1x2y2(xc, yc, w, h)
+                x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
+                conf = active_tracks[trackId].scores[-1]  # Detection confidence, take the last one!
                 col = active_tracks[trackId].colour
+
                 cv2.rectangle(image_track, (x1, y1), (x2, y2), (int(col[0]), int(col[1]), int(col[2])), 6)
 
                 # Display trajectories
