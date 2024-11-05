@@ -24,7 +24,7 @@ if __name__ == '__main__':
                         help="Path to base tracking data folder.")
     parser.add_argument('--base_result', type=str, default='./results/trackers',
                         help='Path to base tracking result folder to be saved to.')
-    parser.add_argument('--reid_path', type=str, default='./model/reid_model.pth',
+    parser.add_argument('--reid_path', type=str, default='./pretrained/reid_model.pth',
                         help='Path to reid model.')
     parser.add_argument('--detections_type', type=str, default="yolo",
                         help='Type of detections to use: set to "yolo" for YOLOv8 custom detections or set to " " for '

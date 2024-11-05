@@ -149,7 +149,7 @@ class FeatureExtractor:
 
 
 def main():
-    feature_extractor = FeatureExtractor("./model/reid_model.pth")
+    feature_extractor = FeatureExtractor("./pretrained/reid_model.pth")
     im = plt.imread("./person_crop.jpg")
     feats = feature_extractor.extract_features_image(im)
     print(feats.shape)  # (1, 512)
