@@ -45,15 +45,15 @@ folder under the `GM-PHD-Tracker`. Then run the following code on terminal (usin
 `python tracker.py --base_data' ./datasets --base_result ./results/trackers ----reid_path ./pretrained/reid_model.pth --detections_type " "`
 
 There are two detection types to use: using MOT Challenge and HiEve public detections OR YOLOv8 custom detections. 
-Please look into the code for more details, particularly `config.yaml` for parameters setting. Then run the following 
-code on terminal (using YOLOv8 detections):
+Please look into the code for more details, particularly `config.yaml` for parameters setting. Run the following 
+code on terminal (for using YOLOv8 detections):
 
 `python tracker.py --base_data' ./datasets --base_result ./results/trackers ----reid_path ./pretrained/reid_model.pth --detections_type "yolo"`
 
 
 ## Evaluate
-To evaluate on MOT16, MOT17, MOT20 or HiEve train datasets, you can run the following code on terminal (which uses 
-[py-motmetrics](https://github.com/cheind/py-motmetrics)):
+To evaluate on MOT16, MOT17, MOT20, HiEve or DanceTrack train datasets, you can run the following code on terminal (which 
+uses [py-motmetrics](https://github.com/cheind/py-motmetrics)):
 
 `python evaluate.py --base_data' ./datasets --base_result ./results/trackers`
 
