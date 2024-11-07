@@ -153,8 +153,8 @@ if __name__ == '__main__':
                          'dancetrack0091', 'dancetrack0092', 'dancetrack0093', 'dancetrack0095', 'dancetrack0100']
         overlap_thresh = 0.5
     else:
-        raise NameError('Set to correct MOT dataset: Set to MOT16, MOT17-DPM, MOT17-FRCNN, MOT17-SDP, MOT20, HiEve or '
-                        'DanceTrack (look into config.yaml).')
+        raise ValueError('Set to correct MOT dataset: Set to MOT16, MOT17-DPM, MOT17-FRCNN, MOT17-SDP, MOT20, HiEve or '
+                         'DanceTrack (look into config.yaml).')
 
     # Tracking starts here.
     for seq in sequences:
@@ -257,8 +257,8 @@ if __name__ == '__main__':
 
             if detections_type != 'yolo':             # Use MOT challenge public detections
                 if MOT_data_type == 'DanceTrack':
-                    raise NameError('DanceTrack has no public detections. It only works with custom detections. Hence, '
-                                    'set detections_type to "yolo" to run the tracker on this dataset.')
+                    raise ValueError('DanceTrack has no public detections. It only works with custom detections. '
+                                     'Hence, set detections_type to "yolo" to run the tracker on this dataset.')
 
                 detections = seq_dets[seq_dets[:, 0] == frame, 2:7]
                 if MOT_data_type == 1:

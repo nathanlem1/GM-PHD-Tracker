@@ -211,8 +211,8 @@ if __name__ == '__main__':
                          'dancetrack0074', 'dancetrack0075', 'dancetrack0080', 'dancetrack0082', 'dancetrack0083', 'dancetrack0086',
                          'dancetrack0087', 'dancetrack0096', 'dancetrack0098', 'dancetrack0099']
     else:
-        raise NameError('Set to correct MOT dataset: Set to MOT16, MOT17-DPM, MOT17-FRCNN, MOT17-SDP, MOT20, HiEve or '
-                        'DanceTrack (look into config.yaml).')
+        raise ValueError('Set to correct MOT dataset: Set to MOT16, MOT17-DPM, MOT17-FRCNN, MOT17-SDP, MOT20, HiEve or '
+                         'DanceTrack (look into config.yaml).')
 
     fn_use_gt = detections_from_ground_truth
     fn_use_output_tracks = detections_from_output_tracks
