@@ -48,5 +48,5 @@ class Track:
 
         # # Moving average
         # eta = 0.9 # 0.01, 0.07
-        # self.mean_features = (1.0 - eta)* self.mean_features  + eta * np.mean(all_feats, axis=0)  # This moving
-        # average doesn't improve the data association!
+        # self.mean_features = (1.0 - eta) * self.mean_features + eta * np.mean(self.features, axis=0)  # This moving
+        # # average doesn't improve the data association!
