@@ -162,6 +162,7 @@ if __name__ == '__main__':
         config = yaml.load(stream, Loader=yaml.FullLoader)
     MOT_data_type = config['tracking']['MOT_data_type']  # We can only evaluate train sequence of each data type.
     is_DanceTrack_val = config['tracking']['is_DanceTrack_val']
+    experiment_name = config['tracking']['experiment_name']
     base_data = args.base_data
     base_result = args.base_result
 
@@ -218,7 +219,7 @@ if __name__ == '__main__':
     fn_use_output_tracks = detections_from_output_tracks
 
     mot_accum = []
-    path_extension = 'GMPHD/data'
+    path_extension = experiment_name+'/data'
 
     for sequence_name in sequences:
         # tracks_file = path.join(base_result + '/' + data_type, sequence_name + '.txt')

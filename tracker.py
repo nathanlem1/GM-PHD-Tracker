@@ -45,6 +45,7 @@ if __name__ == '__main__':
     MOT_data_type = config['tracking']['MOT_data_type']
     train_test_type = config['tracking']['train_test_type']
     is_DanceTrack_val = config['tracking']['is_DanceTrack_val']
+    experiment_name = config['tracking']['experiment_name']
     similarity_threshold = config['tracking']['similarity_threshold']
     prediction_time_threshold = config['tracking']['prediction_time_threshold']
     track_kill_time_threshold = config['tracking']['track_kill_time_threshold']
@@ -161,7 +162,7 @@ if __name__ == '__main__':
 
         print('Sequence:', seq)
         print('Phase: ', phase)
-        path_extension = 'GMPHD/data'
+        path_extension = experiment_name+'/data'
 
         if MOT_data_type == 'MOT16':
             data_folder = os.path.join(base_data, 'MOT16/%s/%s/det/det.txt')

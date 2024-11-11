@@ -31,8 +31,8 @@ class Track:
 
     def update_mean_features(self):
 
-        # All features have equal weight for averaging
-        self.mean_features = np.mean(self.features, axis=0)
+        # # All features have equal weight for averaging
+        # self.mean_features = np.mean(self.features, axis=0)
 
         # # Features are weighted by detection scores
         # all_feats_scoresWeighted = []
@@ -46,7 +46,7 @@ class Track:
         #     all_feats_weightsWeighted.append(self.w_k[i]*self.features[i])
         # self.mean_features = np.mean(all_feats_weightsWeighted,axis=0)
 
-        # # Moving average
-        # eta = 0.9 # 0.01, 0.07
-        # self.mean_features = (1.0 - eta) * self.mean_features + eta * np.mean(self.features, axis=0)  # This moving
-        # # average doesn't improve the data association!
+        # Exponential Moving Average (EMA)
+        eta = 0.9
+        self.mean_features = eta * self.mean_features + (1.0 - eta) * self.features[-1]  # This exponential moving
+        # average improves the data association!

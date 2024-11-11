@@ -11,6 +11,8 @@ tracking:
 
     train_test_type: 'train'  # Set to 'train' or to 'test'
     is_DanceTrack_val: False  # Set to True for DanceTrack validation or to False for DanceTrack train
+    experiment_name: 'GMPHD' # The name of the experiment, used for running different experiments and then evaluations,
+    # e.g. GMPHD, GMPHD2, etc.
 
     similarity_threshold: 0.2  # For data association (0.2 gives better result than 0.4)
     prediction_time_threshold: 3  # 5, 10 #  After this time of predictions, don't save and display the track information
