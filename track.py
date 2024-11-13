@@ -7,7 +7,7 @@ class Track:
         self.m_k = m_k
         self.P_k = P_k
         self.scores = [score]
-        self.features = [features]
+        self.features = [features]  # self.features[-1] will be used as a current track features.
         self.mean_features = features
         self.F_k = F_k
         self.Q_k = Q_k
