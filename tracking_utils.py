@@ -293,6 +293,28 @@ def addOn_prediction(track):
     return out_track
 
 
+def multi_cmc(predicted_intensity, H=np.eye(2, 3)):
+
+    if len(predicted_intensity['m']) == 0:
+        return predicted_intensity
+
+    multi_mean = predicted_intensity['m']
+    multi_covariance = predicted_intensity['P']
+
+    R = H[:2, :2]
+    R6x6 = np.kron(np.eye(3, dtype=float), R)
+    t = H[:2, 2]
+
+    for i in range(len(multi_mean)):
+        mean = R6x6.dot(multi_mean[i])
+        mean[:2] += t.reshape(2,1)
+        cov = multi_covariance[i]
+        cov = R6x6.dot(cov).dot(R6x6.transpose())
+
+        predicted_intensity['m'][i] = mean
+        predicted_intensity['P'][i] = cov
+
+    return predicted_intensity
 
 
 

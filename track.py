@@ -50,3 +50,4 @@ class Track:
         eta = 0.9
         self.mean_features = eta * self.mean_features + (1.0 - eta) * self.features[-1]  # This exponential moving
         # average improves the data association!
+        # self.mean_features /= np.linalg.norm(self.mean_features)  # This normalization decreases performance!

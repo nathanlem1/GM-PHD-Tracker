@@ -11,9 +11,10 @@ import torch
 from ultralytics import YOLO
 
 from GM_PHD_Filter import GM_PHD_Filter
+from cmc import CMC
 from feature_extractor import FeatureExtractor
 from tracking_utils import nms_score_mot, constrain_detections_inFrame, create_new_track, compute_associations, \
-    addOn_prediction, xcycwh_to_x1y1x2y2
+    addOn_prediction, xcycwh_to_x1y1x2y2, multi_cmc
 
 np.random.seed(5)  # For reproducibility
 
@@ -29,6 +30,8 @@ if __name__ == '__main__':
     parser.add_argument('--detections_type', type=str, default=" ",
                         help='Type of detections to use: set to "yolo" for YOLOv8 custom detections or set to " " for '
                              'MOT Challenge and HiEve public detections.')
+    parser.add_argument("--cmc-method", default="none", type=str,
+                        help="cmc method: sparseOptFlow | orb | sift | ecc | none")
 
     args = parser.parse_args()
     device = "cuda" if torch.cuda.is_available() else "cpu"  # Check how many GPUs are there using
@@ -65,6 +68,7 @@ if __name__ == '__main__':
     base_result = args.base_result
     reid_path = args.reid_path
     detections_type = args.detections_type
+    cmc_method = args.cmc_method
 
     # Object detector and feature extractor
     if detections_type == 'yolo':
@@ -156,6 +160,9 @@ if __name__ == '__main__':
     else:
         raise ValueError('Set to correct MOT dataset: Set to MOT16, MOT17-DPM, MOT17-FRCNN, MOT17-SDP, MOT20, HiEve or '
                          'DanceTrack (look into config.yaml).')
+
+    # Instantiate CMC (Camera Motion Compensation)
+    cmc = CMC(method=cmc_method)
 
     # Tracking starts here.
     for seq in sequences:
@@ -336,6 +343,7 @@ if __name__ == '__main__':
                 # [x1, y1, x2, y2, conf, class]
 
                 dets_tm = np.zeros((len(detection_results), 5))
+                dets = copy.deepcopy(dets_tm)  # For CMC
 
                 if feature_extraction_stage_type:
                     for i in range(len(detection_results)):
@@ -387,6 +395,11 @@ if __name__ == '__main__':
             im_height, im_width, C = image.shape
             Filter = GM_PHD_Filter(im_width, im_height, motion_model_type, feature_extraction_stage_type)
             predicted_intensity, model = Filter.predict(Z_k_feats, pruned_intensity)  # model is returned here
+            # Fix camera motion - doesn't help much in performance!
+            if cmc_method != 'none':
+                warp = cmc.apply(image, dets[:, :4])
+                predicted_intensity = multi_cmc(predicted_intensity, warp)
+            # Update the GM-PHD filter with the camera motion compensated predicted intensity
             updated_intensity = Filter.update(Z_k_feats, predicted_intensity)
             pruned_intensity, all_comp = Filter.prune_and_merge(updated_intensity, J_max, use_Jmax)
             estimates = Filter.extract_states(pruned_intensity)  # extracting estimates from the pruned intensity this
