@@ -43,7 +43,7 @@ def appearance_likelihood(features1, features2):
     return app_lik
 
 
-def match_f1f2(feature1, feature2, threshold):
+def match_features_reid(feature1, feature2, threshold):
     cosine_dist = cosine_distance(feature1, feature2)
     dist = (1 - cosine_dist) / 2.0
     if dist <= threshold:  # threshold = 0.3 or 0.2
@@ -229,14 +229,14 @@ def compute_associations(image, active_tracks, estimates_m, estimates_feat, incl
     return None, None
 
 
-def create_new_track(num_frame, active_tracks, global_tracks, archived_tracks, estimates_w_m_P_score_feat, model,
+def create_new_track(frame, active_tracks, global_tracks, archived_tracks, estimates_w_m_P_score_feat, model,
                      include_ReId, window_ReId):
 
     colour = tuple(np.random.choice(range(256), size=3))
     track_id = len(list(global_tracks))
     track = Track(estimates_w_m_P_score_feat[0], estimates_w_m_P_score_feat[1], estimates_w_m_P_score_feat[2],
                   estimates_w_m_P_score_feat[3], estimates_w_m_P_score_feat[4], model['F_k'], model['Q_k'], colour,
-                  track_id, num_frame, motion_model_type)
+                  track_id, frame, motion_model_type)
 
     # Do ReId here
     if include_ReId:
@@ -244,8 +244,10 @@ def create_new_track(num_frame, active_tracks, global_tracks, archived_tracks, e
         matches = []
         k_del = []
         for k, v in archived_tracks.items():
-            if v.end_frame - v.start_frame <= window_ReId:
-                bool_m, dist = match_f1f2(v.mean_features, track.mean_features, reid_threshold)
+            # if v.end_frame - v.start_frame <= window_ReId:  # Todo:
+            # if frame - v.end_frame <= window_ReId:
+            if (v.end_frame - v.start_frame >= 1) and (frame - v.end_frame <= window_ReId):
+                bool_m, dist = match_features_reid(v.mean_features, track.mean_features, reid_threshold)
                 if bool_m:
                     matches.append((k, v, dist))
             else:
