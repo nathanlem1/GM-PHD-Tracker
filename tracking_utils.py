@@ -244,8 +244,6 @@ def create_new_track(frame, active_tracks, global_tracks, archived_tracks, estim
         matches = []
         k_del = []
         for k, v in archived_tracks.items():
-            # if v.end_frame - v.start_frame <= window_ReId:  # Todo:
-            # if frame - v.end_frame <= window_ReId:
             if (v.end_frame - v.start_frame >= 1) and (frame - v.end_frame <= window_ReId):
                 bool_m, dist = match_features_reid(v.mean_features, track.mean_features, reid_threshold)
                 if bool_m:
