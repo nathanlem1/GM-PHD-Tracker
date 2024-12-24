@@ -223,7 +223,7 @@ if __name__ == '__main__':
 
     for sequence_name in sequences:
         # tracks_file = path.join(base_result + '/' + data_type, sequence_name + '.txt')
-        tracks_file = path.join(base_result + '/' + data_type+'-'+phase, 'GMPHD/data', sequence_name + '.txt') # tracks output file
+        tracks_file = path.join(base_result + '/' + data_type+'-'+phase, path_extension, sequence_name + '.txt')  # tracks output file
 
         if path.isfile(tracks_file):
             if MOT_data_type == 'HiEve':  # HiEve

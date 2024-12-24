@@ -25,10 +25,13 @@ The qualitative result (demo) of the GM-PHD-Tracker on MOT17-03 data with a SDP 
 
 
 ## Installation
-1. Git clone this repo: `git clone https://github.com/nathanlem1/GM-PHD-Tracker.git`
-2. Install dependencies by `pip install -r requirements.txt` to have the same environment configuration as the one we 
-used.
+Git clone this repo and install dependencies to have the same environment configuration as the one we used.
 
+```shell
+git clone https://github.com/nathanlem1/GM-PHD-Tracker.git
+cd GM-PHD-Tracker/
+pip install -r requirements.txt
+```
 
 ## Tracking Data 
 We used [MOT16](https://motchallenge.net/data/MOT16/), [MOT17](https://motchallenge.net/data/MOT17/), 
@@ -42,20 +45,28 @@ To perfrom tracking, you need to download the reid model from
 [here](https://drive.google.com/file/d/1XWXzfcSrE2ie9TSGlIqQEeFfXE2lMmDe/view?usp=drive_link) and put it in `pretrained` 
 folder under the `GM-PHD-Tracker`. Then run the following code on terminal (using public detections):
 
-`python tracker.py --base_data' ./datasets --base_result ./results/trackers ----reid_path ./pretrained/reid_model.pth --detections_type " "`
+```shell
+cd GM-PHD-Tracker/
+python tracker.py --base_data ./datasets --base_result ./results/trackers ----reid_path ./pretrained/reid_model.pth --detections_type " "
+```
 
 There are two detection types to use: using MOT Challenge and HiEve public detections OR YOLOv8 custom detections. 
 Please look into the code for more details, particularly `config.yaml` for parameters setting. Run the following 
 code on terminal (for using YOLOv8 detections):
 
-`python tracker.py --base_data' ./datasets --base_result ./results/trackers ----reid_path ./pretrained/reid_model.pth --detections_type "yolo"`
-
+```shell
+cd GM-PHD-Tracker/
+python tracker.py --base_data ./datasets --base_result ./results/trackers ----reid_path ./pretrained/reid_model.pth --detections_type "yolo"
+```
 
 ## Evaluate
 To evaluate on MOT16, MOT17, MOT20, HiEve or DanceTrack train datasets, you can run the following code on terminal (which 
 uses [py-motmetrics](https://github.com/cheind/py-motmetrics)):
 
-`python evaluate.py --base_data' ./datasets --base_result ./results/trackers`
+```shell
+cd GM-PHD-Tracker/
+python evaluate.py --base_data ./datasets --base_result ./results/trackers
+```
 
 Please look into the code for more details, particularly `config.yaml` for parameters setting.
 
@@ -63,8 +74,10 @@ You can also use the official MOTChallenge evaluation code from [TrackEval](http
 to evaluate the MOT16, MOT17, MOT20, HiEve and DanceTrack `train` datasets. DanceTrack also has `val` dataset, in which 
 case you need to use `val` for `--SPLIT_TO_EVAL`.
 
-`python TrackEval/scripts/run_mot_challenge.py --BENCHMARK MOT16 --SPLIT_TO_EVAL train --TRACKERS_TO_EVAL GMPHD --METRICS HOTA CLEAR Identity VACE --GT_FOLDER results/gt/ --TRACKERS_FOLDER results/trackers/ --USE_PARALLEL False --NUM_PARALLEL_CORES 1`
-
+```shell
+cd GM-PHD-Tracker/
+python TrackEval/scripts/run_mot_challenge.py --BENCHMARK MOT16 --SPLIT_TO_EVAL train --TRACKERS_TO_EVAL GMPHD1 --METRICS HOTA CLEAR Identity VACE --GT_FOLDER results/gt/ --TRACKERS_FOLDER results/trackers/ --USE_PARALLEL False --NUM_PARALLEL_CORES 1
+```
 
 
 ## Citation
