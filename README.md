@@ -36,20 +36,19 @@ pip install -r requirements.txt
 The code was tested using torch 2.2.2+cu118 and torchvision 0.17.2+cu118. You can install torch and matched torchvision from [pytorch.org](https://pytorch.org/get-started/locally/).
 
 
-## Tracking Data 
+## Data Preparation 
 We used [MOT16](https://motchallenge.net/data/MOT16/), [MOT17](https://motchallenge.net/data/MOT17/), 
 [MOT20](https://motchallenge.net/data/MOT20/), [HiEve](http://humaninevents.org/) and [DanceTrack](https://github.com/DanceTrack/DanceTrack) 
 benchmark data sets. Download these datasets from their corresponding links and put them in `datasets` folder created under the 
 `GM-PHD-Tracker` folder.
 
 
-## Track
+## Tracking
 To perfrom tracking, you need to download the reid model from 
 [here](https://drive.google.com/file/d/1XWXzfcSrE2ie9TSGlIqQEeFfXE2lMmDe/view?usp=drive_link) and put it in `pretrained` 
 folder under the `GM-PHD-Tracker`. Then run the following code on terminal (using public detections):
 
 ```shell
-cd GM-PHD-Tracker/
 python tracker.py --base_data ./datasets --base_result ./results/trackers ----reid_path ./pretrained/reid_model.pth --detections_type " "
 ```
 
@@ -58,16 +57,14 @@ Please look into the code for more details, particularly `config.yaml` for param
 code on terminal (for using YOLOv8 detections):
 
 ```shell
-cd GM-PHD-Tracker/
 python tracker.py --base_data ./datasets --base_result ./results/trackers ----reid_path ./pretrained/reid_model.pth --detections_type "yolo"
 ```
 
-## Evaluate
+## Evaluation
 To evaluate on MOT16, MOT17, MOT20, HiEve or DanceTrack train datasets, you can run the following code on terminal (which 
 uses [py-motmetrics](https://github.com/cheind/py-motmetrics)):
 
 ```shell
-cd GM-PHD-Tracker/
 python evaluate.py --base_data ./datasets --base_result ./results/trackers
 ```
 
@@ -78,7 +75,6 @@ to evaluate the MOT16, MOT17, MOT20, HiEve and DanceTrack `train` datasets. Danc
 case you need to use `val` for `--SPLIT_TO_EVAL`.
 
 ```shell
-cd GM-PHD-Tracker/
 python TrackEval/scripts/run_mot_challenge.py --BENCHMARK MOT16 --SPLIT_TO_EVAL train --TRACKERS_TO_EVAL GMPHD1 --METRICS HOTA CLEAR Identity VACE --GT_FOLDER results/gt/ --TRACKERS_FOLDER results/trackers/ --USE_PARALLEL False --NUM_PARALLEL_CORES 1
 ```
 
