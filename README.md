@@ -33,6 +33,9 @@ cd GM-PHD-Tracker/
 pip install -r requirements.txt
 ```
 
+The code was tested using torch 2.2.2+cu118 and torchvision 0.17.2+cu118. You can install torch and matched torchvision from [pytorch.org](https://pytorch.org/get-started/locally/).
+
+
 ## Tracking Data 
 We used [MOT16](https://motchallenge.net/data/MOT16/), [MOT17](https://motchallenge.net/data/MOT17/), 
 [MOT20](https://motchallenge.net/data/MOT20/), [HiEve](http://humaninevents.org/) and [DanceTrack](https://github.com/DanceTrack/DanceTrack) 
