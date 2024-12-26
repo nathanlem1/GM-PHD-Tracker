@@ -106,7 +106,7 @@ class ResNet34(nn.Module):
 
 
 class FeatureExtractor:
-    def __init__(self, reid_model_weights='./model/reid_model.pth'):
+    def __init__(self, reid_model_weights='./pretrained/reid_model.pth'):
         self.weights_path = reid_model_weights
         self.model = ResNet34()
         self.model = torch.nn.DataParallel(self.model).to(device)
