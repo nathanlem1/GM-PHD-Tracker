@@ -25,7 +25,7 @@ tracking:
     reid_threshold: 0.2  # 0.2 (better) #0.3  # threshold for reid (lower will require greater similarity)
 
     feature_extraction_stage_type: False  # Set to True for extracting features from estimates or to False for extracting
-    # features from observations which also allows augmented likelihood at the update step.
+    # features from observations (detections) which also allows augmented likelihood at the update step.
     is_batch_feature_extraction: True  # Set to True for batch (of images) feature extraction or to False for single image
     # feature extraction.
 

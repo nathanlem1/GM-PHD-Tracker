@@ -343,7 +343,7 @@ if __name__ == '__main__':
                 # [x1, y1, x2, y2, conf, class]
 
                 dets_tm = np.zeros((len(detection_results), 5))
-                dets = copy.deepcopy(dets_tm)  # For CMC
+                dets = copy.deepcopy(detection_results)  # For CMC
 
                 if feature_extraction_stage_type:
                     for i in range(len(detection_results)):
