@@ -3,9 +3,12 @@ This script is used for extracting feature representations from person images fo
 using learned ReId ResNet34 model.
 """
 
+from copy import deepcopy
 import cv2
 import math
 import matplotlib.pyplot as plt
+
+from thop import profile
 
 import torch
 import torch.optim
@@ -13,6 +16,18 @@ import torch.nn as nn
 import torch.utils.data
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+
+def get_model_info(model, tsize):
+
+    img = torch.zeros((1, 3, tsize[0], tsize[1]), device=device)
+    macs, params = profile(deepcopy(model.to(device)), inputs=(img,), verbose=False)
+    params /= 1e6  # Number of parameters (in millions)
+    macs /= 1e9   # MACs (Multiply-ACcumulate operations)
+    flops = macs * 2  # Gflops - Giga FLOPs (Floating Point OPerations). Each MAC counts as two FLOPs.
+    # info = "Params: {:f}M, Gflops: {:f}, Gmacs: {:.f}".format(params, flops, macs)
+    info = "Params: {:.4f}M, Gflops: {:.4f}, Gmacs: {:.4f}".format(params, flops, macs)
+    return info
 
 
 def conv3x3(in_planes, out_planes, stride=1):
@@ -109,6 +124,7 @@ class FeatureExtractor:
     def __init__(self, reid_model_weights='./pretrained/reid_model.pth'):
         self.weights_path = reid_model_weights
         self.model = ResNet34()
+        self.model_info = get_model_info(self.model, tsize=(128, 384))
         self.model = torch.nn.DataParallel(self.model).to(device)
         model_dict = self.model.state_dict()
         pretrained = torch.load(reid_model_weights)

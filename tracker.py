@@ -10,6 +10,8 @@ import yaml
 import torch
 from ultralytics import YOLO
 
+from loguru import logger
+
 from GM_PHD_Filter import GM_PHD_Filter
 from cmc import CMC
 from feature_extractor import FeatureExtractor
@@ -21,7 +23,7 @@ np.random.seed(5)  # For reproducibility
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Tracking pipeline for GM-PHD-Tracker.')
-    parser.add_argument('--base_data', type=str, default='./datasets',
+    parser.add_argument('--base_data', type=str, default='../datasets',
                         help="Path to base tracking data folder.")
     parser.add_argument('--base_result', type=str, default='./results/trackers',
                         help='Path to base tracking result folder to be saved to.')
@@ -75,6 +77,7 @@ if __name__ == '__main__':
         detector = YOLO('yolov8l.pt')  # YOLOv8: https://github.com/ultralytics/ultralytics
         detector.to(device)
     feat_extractor = FeatureExtractor(reid_path)  # Features extraction using pre-trained ResNet34.
+    logger.info("ReID Model Summary: {}".format(feat_extractor.model_info))
 
     if MOT_data_type == 'MOT16':
         if train_test_type == 'train':
