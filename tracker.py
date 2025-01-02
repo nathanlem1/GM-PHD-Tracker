@@ -142,7 +142,7 @@ if __name__ == '__main__':
                              'dancetrack0097']
             else:
                 sequences = ['dancetrack0001', 'dancetrack0002', 'dancetrack0006', 'dancetrack0008', 'dancetrack0012', 'dancetrack0015',
-                             'dancetrack0016', 'dancetrack0020', 'dancetrack0023', 'dancetrack0024','dancetrack0027', 'dancetrack0029',
+                             'dancetrack0016', 'dancetrack0020', 'dancetrack0023', 'dancetrack0024', 'dancetrack0027', 'dancetrack0029',
                              'dancetrack0032', 'dancetrack0033', 'dancetrack0037', 'dancetrack0039', 'dancetrack0044', 'dancetrack0045',
                              'dancetrack0049', 'dancetrack0051', 'dancetrack0052', 'dancetrack0053', 'dancetrack0055', 'dancetrack0057',
                              'dancetrack0061', 'dancetrack0062', 'dancetrack0066', 'dancetrack0068', 'dancetrack0069', 'dancetrack0072',
@@ -151,7 +151,7 @@ if __name__ == '__main__':
         else:
             phase = 'test'
             sequences = ['dancetrack0003', 'dancetrack0009', 'dancetrack0011', 'dancetrack0013', 'dancetrack0017', 'dancetrack0021',
-                         'dancetrack0022', 'dancetrack0028','dancetrack0031', 'dancetrack0036', 'dancetrack0038', 'dancetrack0040',
+                         'dancetrack0022', 'dancetrack0028', 'dancetrack0031', 'dancetrack0036', 'dancetrack0038', 'dancetrack0040',
                          'dancetrack0042', 'dancetrack0046', 'dancetrack0048', 'dancetrack0050', 'dancetrack0054', 'dancetrack0056',
                          'dancetrack0059', 'dancetrack0060', 'dancetrack0064', 'dancetrack0067', 'dancetrack0070', 'dancetrack0071',
                          'dancetrack0076', 'dancetrack0078', 'dancetrack0084', 'dancetrack0085', 'dancetrack0088', 'dancetrack0089',
