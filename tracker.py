@@ -156,7 +156,6 @@ if __name__ == '__main__':
                          'dancetrack0059', 'dancetrack0060', 'dancetrack0064', 'dancetrack0067', 'dancetrack0070', 'dancetrack0071',
                          'dancetrack0076', 'dancetrack0078', 'dancetrack0084', 'dancetrack0085', 'dancetrack0088', 'dancetrack0089',
                          'dancetrack0091', 'dancetrack0092', 'dancetrack0093', 'dancetrack0095', 'dancetrack0100']
-        overlap_thresh = 0.5
     else:
         raise ValueError('Set to correct MOT dataset: Set to MOT16, MOT17-DPM, MOT17-FRCNN, MOT17-SDP, MOT20, HiEve or '
                          'DanceTrack (look into config.yaml).')
