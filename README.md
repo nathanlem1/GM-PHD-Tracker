@@ -40,7 +40,27 @@ The code was tested using torch 2.2.2+cu118 and torchvision 0.17.2+cu118. You ca
 We used [MOT16](https://motchallenge.net/data/MOT16/), [MOT17](https://motchallenge.net/data/MOT17/), 
 [MOT20](https://motchallenge.net/data/MOT20/), [HiEve](http://humaninevents.org/) and [DanceTrack](https://github.com/DanceTrack/DanceTrack) 
 benchmark data sets. Download these datasets from their corresponding links and put them in `datasets` folder created under the 
-`GM-PHD-Tracker` folder.
+`GM-PHD-Tracker` folder, according to the following structure:
+
+```
+datasets
+|——————MOT16
+|        └——————train
+|        └——————test
+|——————MOT17
+|        └——————train
+|        └——————test
+|——————MOT20
+|        └——————train
+|        └——————test
+|——————HiEve
+|        └——————train
+|        └——————test
+|——————DanceTrack
+|        └——————train
+|        └——————test
+|        └——————val
+```
 
 
 ## Tracking
