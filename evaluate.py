@@ -150,7 +150,7 @@ def get_distance_matrix_box(gt_frame, track_frame):
 # Calculate the MOT metrics
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Tracking pipeline for GM-PHD-Tracker.')
-    parser.add_argument('--base_data', type=str, default='./datasets',
+    parser.add_argument('--base_data', type=str, default='../datasets',
                         help="Path to base tracking data folder.")
     parser.add_argument('--base_result', type=str, default='./results/trackers',
                         help='Path to base tracking result folder to be saved to.')
@@ -160,7 +160,7 @@ if __name__ == '__main__':
     # Load config. Look at the comments in the config.yaml for more information about each variable or parameter.
     with open('config.yaml', 'r') as stream:
         config = yaml.load(stream, Loader=yaml.FullLoader)
-    MOT_data_type = config['tracking']['MOT_data_type']  # We can only evaluate train sequence of each data type.
+    MOT_data_type = config['tracking']['MOT_data_type']  # We can only evaluate train or val sequence of each data type.
     is_DanceTrack_val = config['tracking']['is_DanceTrack_val']
     experiment_name = config['tracking']['experiment_name']
     base_data = args.base_data
@@ -202,7 +202,8 @@ if __name__ == '__main__':
             sequences = ['dancetrack0004', 'dancetrack0005', 'dancetrack0007', 'dancetrack0010', 'dancetrack0014', 'dancetrack0018',
                          'dancetrack0019', 'dancetrack0025', 'dancetrack0026', 'dancetrack0030', 'dancetrack0034', 'dancetrack0035',
                          'dancetrack0041', 'dancetrack0043', 'dancetrack0047', 'dancetrack0058', 'dancetrack0063', 'dancetrack0065',
-                         'dancetrack0073', 'dancetrack0077', 'dancetrack0079', 'dancetrack0081', 'dancetrack0090', 'dancetrack0094']            # dancetrack0097
+                         'dancetrack0073', 'dancetrack0077', 'dancetrack0079', 'dancetrack0081', 'dancetrack0090', 'dancetrack0094',
+                         'dancetrack0097']
         else:
             sequences = ['dancetrack0001', 'dancetrack0002', 'dancetrack0006', 'dancetrack0008', 'dancetrack0012', 'dancetrack0015',
                          'dancetrack0016', 'dancetrack0020', 'dancetrack0023', 'dancetrack0024','dancetrack0027', 'dancetrack0029',

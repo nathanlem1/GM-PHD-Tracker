@@ -10,7 +10,7 @@ tracking:
     MOT_data_type: 'MOT16'  # Set to 'MOT16', 'MOT17-DPM', 'MOT17-FRCNN', 'MOT17-SDP', 'MOT20', 'HiEve' or 'DanceTrack'.
 
     train_test_type: 'train'  # Set to 'train' or to 'test'
-    is_DanceTrack_val: False  # Set to True for DanceTrack validation or to False for DanceTrack train
+    is_DanceTrack_val: True  # Set to True for DanceTrack validation or to False for DanceTrack train
     experiment_name: 'GMPHD1' # The name of the experiment, used for running different experiments and then evaluations,
     # e.g. GMPHD1, GMPHD2, etc.
 
