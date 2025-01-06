@@ -7,6 +7,7 @@ from copy import deepcopy
 import cv2
 import math
 import matplotlib.pyplot as plt
+import numpy as np
 
 from thop import profile
 
@@ -121,8 +122,9 @@ class ResNet34(nn.Module):
 
 
 class FeatureExtractor:
-    def __init__(self, reid_model_weights='./pretrained/reid_model.pth'):
+    def __init__(self, reid_model_weights='./pretrained/reid_model.pth', batch_size=50):
         self.weights_path = reid_model_weights
+        self.batch_size = batch_size
         self.model = ResNet34()
         self.model_info = get_model_info(self.model, tsize=(128, 384))
         self.model = torch.nn.DataParallel(self.model).to(device)
@@ -149,16 +151,29 @@ class FeatureExtractor:
         return features
 
     def extract_features_batch(self, ims):
+        batch_crops = []
+        crops = []
         if len(ims) > 0:
-            crop_batch = torch.Tensor(len(ims), 3, 384, 128)
             for i, crop in enumerate(ims):
                 input_np = cv2.resize(crop, (128, 384))
                 input_np = input_np.transpose((2, 0, 1)) / 255.0  # This converts (H,W,C) to (C.H,W) and normalizes it.
                 inputs = torch.from_numpy(input_np).float()
-                crop_batch[i] = inputs
+                crops.append(inputs)
 
-            feats = self.model(crop_batch.to(device))
-            features = feats.data.cpu().numpy()
+                if (i + 1) % self.batch_size == 0:
+                    crops = torch.stack(crops, dim=0)
+                    batch_crops.append(crops)
+                    crops = []
+
+            if len(crops):
+                crops = torch.stack(crops, dim=0)
+                batch_crops.append(crops)
+
+            features = np.zeros((0, 512))
+
+            for crops in batch_crops:
+                feats = self.model(crops.to(device))
+                features = np.vstack((features, feats.data.cpu().numpy()))
 
             return features
         return None
