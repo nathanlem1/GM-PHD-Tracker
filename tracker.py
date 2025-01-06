@@ -58,7 +58,6 @@ if __name__ == '__main__':
     appearance_weight = config['tracking']['appearance_weight']
     window_ReId = config['tracking']['window_ReId']
     feature_extraction_stage_type = config['tracking']['feature_extraction_stage_type']
-    is_batch_feature_extraction = config['tracking']['is_batch_feature_extraction']
     use_Jmax = config['tracking']['use_Jmax']
     is_AddOn_prediction = config['tracking']['is_AddOn_prediction']
     include_appearance = config['tracking']['include_appearance']
@@ -76,8 +75,9 @@ if __name__ == '__main__':
     if detections_type == 'yolo':
         detector = YOLO('yolov8l.pt')  # YOLOv8: https://github.com/ultralytics/ultralytics
         detector.to(device)
-    feat_extractor = FeatureExtractor(reid_path)  # Features extraction using pre-trained ResNet34.
-    logger.info("ReID Model Summary: {}".format(feat_extractor.model_info))
+    if include_appearance:
+        feat_extractor = FeatureExtractor(reid_path, 50)  # Features extraction using pre-trained model.
+        logger.info("ReID Model Summary: {}".format(feat_extractor.model_info))
 
     if MOT_data_type == 'MOT16':
         if train_test_type == 'train':
@@ -122,7 +122,7 @@ if __name__ == '__main__':
         else:
             phase = 'test'
             sequences = ['MOT20-04', 'MOT20-06', 'MOT20-07', 'MOT20-08']
-        overlap_thresh = 0.5
+        overlap_thresh = 0.4
     elif MOT_data_type == 'HiEve':
         if train_test_type == 'train':
             phase = 'train'
@@ -292,7 +292,7 @@ if __name__ == '__main__':
                 if feature_extraction_stage_type:
                     dets_cp = copy.deepcopy(dets)[:, 0:5]
                     for i in range(dets_cp.shape[0]):
-                        features_all.append(0.0)
+                        features_all.append(0.0)   # Fill dummy values
                     dets_cp[:, 2:4] -= dets_cp[:, 0:2]  # convert [x1,y1,x2,y2] to [x1,y1,w,h]
                     dets_cp[:, 0:2] += dets_cp[:, 2:4] / 2.0  # convert [x1,y1,w,h] to [xc,yc,w,h]
 
@@ -312,18 +312,15 @@ if __name__ == '__main__':
                         y = int(dets_cp[i, 1])
                         X = int(dets_cp[i, 2])
                         Y = int(dets_cp[i, 3])
-                        crop = image[y:Y, x:X, :]
-
-                        if not is_batch_feature_extraction:
-                            # Extract from each crop
-                            feats = feat_extractor.extract_features_image(crop)
-                            features_all.append(feats)
-                        else:
-                            # Or extract from batch of crops. If this fails due to memory issue, try the above one
-                            # (extracting from each crop), particularly for MOT20!
+                        if include_appearance:
+                            crop = image[y:Y, x:X, :]
                             crops.append(crop)
-                    if is_batch_feature_extraction:
+
+                    if include_appearance:
+                        # If this fails due to memory issue, you need to reduce the batch_size for feature extraction
                         features_all = feat_extractor.extract_features_batch(crops)
+                    else:
+                        [features_all.append(0.0) for i in range(dets_cp.shape[0])]  # Fill dummy values
 
                     dets_cp_Z[:, 2:4] -= dets_cp_Z[:, 0:2]  # convert [x1,y1,x2,y2] to [x1,y1,w,h]
                     dets_cp_Z[:, 0:2] += dets_cp_Z[:, 2:4]/2.0  # convert [x1,y1,w,h] to [xc,yc,w,h]
@@ -350,7 +347,7 @@ if __name__ == '__main__':
                 if feature_extraction_stage_type:
                     for i in range(len(detection_results)):
                         dets_tm[i, :] = detection_results[i][0:5]
-                        features_all.append(0.0)
+                        features_all.append(0.0)  # Fill dummy values
 
                     dets_tm[:, 2:4] -= dets_tm[:, 0:2]  # convert [x1,y1,x2,y2] to [x1,y1,w,h]
                     dets_tm[:, 0:2] += dets_tm[:, 2:4]/2.0  # convert [x1,y1,w,h] to [xc,yc,w,h]
@@ -368,18 +365,15 @@ if __name__ == '__main__':
                         y = int(dets_tm[i, 1])
                         X = int(dets_tm[i, 2])
                         Y = int(dets_tm[i, 3])
-                        crop = image[y:Y, x:X, :]
-
-                        if not is_batch_feature_extraction:
-                            # Extract from each crop
-                            feats = feat_extractor.extract_features_image(crop)
-                            features_all.append(feats)
-                        else:
-                            # Or extract from batch of crops. If this fails due to memory issue, try the above one
-                            # (extracting from each crop), particularly for MOT20!
+                        if include_appearance:
+                            crop = image[y:Y, x:X, :]
                             crops.append(crop)
-                    if is_batch_feature_extraction:
+
+                    if include_appearance:
+                        # If this fails due to memory issue, you need to reduce the batch_size for feature extraction
                         features_all = feat_extractor.extract_features_batch(crops)
+                    else:
+                         [features_all.append(0.0) for i in range(len(detection_results))]  # Fill dummy values
 
                     dets_tm[:, 2:4] -= dets_tm[:, 0:2]  # convert [x1,y1,x2,y2] to [x1,y1,w,h]
                     dets_tm[:, 0:2] += dets_tm[:, 2:4] / 2.0  # convert [x1,y1,w,h] to [xc,yc,w,h]
@@ -395,7 +389,7 @@ if __name__ == '__main__':
             # J_max = N_k + M_k_1  # Maximum allowable number of Gaussian components
             J_max = max(M_k_1, N_k, np.random.poisson(M_k_1))  # Maximum allowable number of Gaussian components
             im_height, im_width, C = image.shape
-            Filter = GM_PHD_Filter(im_width, im_height, motion_model_type, feature_extraction_stage_type)
+            Filter = GM_PHD_Filter(im_width, im_height, motion_model_type, feature_extraction_stage_type, include_appearance)
             predicted_intensity, model = Filter.predict(Z_k_feats, pruned_intensity)  # model is returned here
             # Fix camera motion - doesn't help much in performance!
             if cmc_method != 'none':
@@ -441,18 +435,15 @@ if __name__ == '__main__':
                         X = im_width
                     if Y > im_height:
                         Y = im_height
-                    crop = image[y:Y, x:X, :]
-
-                    if not is_batch_feature_extraction:
-                        # Extract from each crop
-                        feats = feat_extractor.extract_features_image(crop)
-                        features_all.append(feats)
-                    else:
-                        # Or extract from batch of crops. If this fails due to memory issue, try the above one
-                        # (extracting from each crop), particularly for MOT20!
+                    if include_appearance:
+                        crop = image[y:Y, x:X, :]
                         crops.append(crop)
-                if is_batch_feature_extraction:
+
+                if include_appearance:
+                    # If this fails due to memory issue, you need to reduce the batch_size for feature extraction
                     features_all = feat_extractor.extract_features_batch(crops)
+                else:
+                    [features_all.append(0.0) for i in range(len(estimates['m']))]  # Fill dummy values
 
                 for f in range(len(estimates['m'])):
                     estimates['feat'].append(features_all[f])

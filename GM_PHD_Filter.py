@@ -111,10 +111,11 @@ def mvnpdf(x, mean, covariance):
 
 
 class GM_PHD_Filter:
-    def __init__(self, im_width, im_height, motion_model_type, feature_extraction_stage_type):
+    def __init__(self, im_width, im_height, motion_model_type, feature_extraction_stage_type, include_appearance):
         self.motion_model_type = motion_model_type
         self.model = set_model(im_width, im_height, motion_model_type)
         self.feature_extraction_stage_type = feature_extraction_stage_type
+        self.include_appearance = include_appearance
 
     # Step 1 and 2: Birth new targets and predict existing targets (Gaussian components) (According to the original
     # paper)
@@ -221,7 +222,7 @@ class GM_PHD_Filter:
             l = l + 1
             for j in range(num_targets_Jk_k_minus_1):
                 z_k = copy.deepcopy(Z_k[:, z]).reshape(-1, 1)
-                if not self.feature_extraction_stage_type:
+                if not self.feature_extraction_stage_type and self.include_appearance:
                     app_lik = appearance_likelihood(features[z], predicted_intensity['feat'][j])  # Appearance
                     # likelihood
                 else:
