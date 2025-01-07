@@ -122,7 +122,7 @@ if __name__ == '__main__':
         else:
             phase = 'test'
             sequences = ['MOT20-04', 'MOT20-06', 'MOT20-07', 'MOT20-08']
-        overlap_thresh = 0.4
+        overlap_thresh = 0.5
     elif MOT_data_type == 'HiEve':
         if train_test_type == 'train':
             phase = 'train'

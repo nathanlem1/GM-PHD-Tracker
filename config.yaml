@@ -33,7 +33,9 @@ tracking:
     include_appearance: True  # Set to True if you want to include appearance features in addition to motion information
     # for track-to-estimate association.
 
-    include_ReId: True   # Set to True for performing ReId from archived tracks or to False for not using ReId.
+    include_ReId: True   # Set to True for performing ReId from removed or archived tracks before creating new tracks
+    # or to False for not doing ReId.
+
     display_tracks: False
     display_trajectories: False
     save_tracked_frames: False
