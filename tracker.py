@@ -457,9 +457,9 @@ if __name__ == '__main__':
                     estimates_w_m_P_score_feat = [estimates['w'][i], estimates['m'][i], estimates['P'][i],
                                                   estimates['score'][i], estimates['feat'][i]]
                     active_tracks, global_tracks, archived_tracks = create_new_track(frame, active_tracks,
-                                                                                     global_tracks,
-                                                                                     archived_tracks,
-                                                                                     estimates_w_m_P_score_feat, model,
+                                                                                     global_tracks, archived_tracks,
+                                                                                     estimates_w_m_P_score_feat,
+                                                                                     model, include_appearance,
                                                                                      include_ReId, window_ReId)
             else:
                 matched = {}
@@ -511,8 +511,8 @@ if __name__ == '__main__':
                         active_tracks, global_tracks, archived_tracks = create_new_track(frame, active_tracks,
                                                                                          global_tracks, archived_tracks,
                                                                                          estimates_w_m_P_score_feat,
-                                                                                         model, include_ReId,
-                                                                                         window_ReId)
+                                                                                         model, include_appearance,
+                                                                                         include_ReId, window_ReId)
                     matched[est_indx] = 1
 
                 # Next deal with any estimated states not associated with tracks
@@ -524,11 +524,10 @@ if __name__ == '__main__':
                                                           estimates['feat'][indx]]
                             # Create a new track
                             active_tracks, global_tracks, archived_tracks = create_new_track(frame, active_tracks,
-                                                                                             global_tracks,
-                                                                                             archived_tracks,
+                                                                                             global_tracks, archived_tracks,
                                                                                              estimates_w_m_P_score_feat,
-                                                                                             model, include_ReId,
-                                                                                             window_ReId)
+                                                                                             model, include_appearance,
+                                                                                             include_ReId, window_ReId)
 
                 # Next deal with any tracks not associated with current estimated states. i.e. - Just predict till
                 # prediction <= prediction_time_threshold; after that, kill the tracks.

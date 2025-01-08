@@ -230,7 +230,7 @@ def compute_associations(image, active_tracks, estimates_m, estimates_feat, incl
 
 
 def create_new_track(frame, active_tracks, global_tracks, archived_tracks, estimates_w_m_P_score_feat, model,
-                     include_ReId, window_ReId):
+                     include_appearance, include_ReId, window_ReId):
 
     colour = tuple(np.random.choice(range(256), size=3))
     track_id = len(list(global_tracks))
@@ -239,7 +239,7 @@ def create_new_track(frame, active_tracks, global_tracks, archived_tracks, estim
                   track_id, frame, motion_model_type)
 
     # Do ReId here
-    if include_ReId:
+    if include_ReId and include_appearance:
         match_reid = False
         matches = []
         k_del = []
