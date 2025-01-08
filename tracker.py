@@ -57,7 +57,7 @@ if __name__ == '__main__':
     track_min_length = config['tracking']['track_min_length']
     appearance_weight = config['tracking']['appearance_weight']
     window_ReId = config['tracking']['window_ReId']
-    feature_extraction_stage_type = config['tracking']['feature_extraction_stage_type']
+    feature_extraction_estimates = config['tracking']['feature_extraction_estimates']
     use_Jmax = config['tracking']['use_Jmax']
     is_AddOn_prediction = config['tracking']['is_AddOn_prediction']
     include_appearance = config['tracking']['include_appearance']
@@ -289,7 +289,7 @@ if __name__ == '__main__':
                 # Extract features from cropped images using observation bounding boxes.
                 Z_k_feats = []
                 features_all = []
-                if feature_extraction_stage_type:
+                if feature_extraction_estimates:
                     dets_cp = copy.deepcopy(dets)[:, 0:5]
                     for i in range(dets_cp.shape[0]):
                         features_all.append(0.0)   # Fill dummy values
@@ -344,7 +344,7 @@ if __name__ == '__main__':
                 dets_tm = np.zeros((len(detection_results), 5))
                 dets = copy.deepcopy(detection_results)  # For CMC
 
-                if feature_extraction_stage_type:
+                if feature_extraction_estimates:
                     for i in range(len(detection_results)):
                         dets_tm[i, :] = detection_results[i][0:5]
                         features_all.append(0.0)  # Fill dummy values
@@ -389,7 +389,7 @@ if __name__ == '__main__':
             # J_max = N_k + M_k_1  # Maximum allowable number of Gaussian components
             J_max = max(M_k_1, N_k, np.random.poisson(M_k_1))  # Maximum allowable number of Gaussian components
             im_height, im_width, C = image.shape
-            Filter = GM_PHD_Filter(im_width, im_height, motion_model_type, feature_extraction_stage_type, include_appearance)
+            Filter = GM_PHD_Filter(im_width, im_height, motion_model_type, feature_extraction_estimates, include_appearance)
             predicted_intensity, model = Filter.predict(Z_k_feats, pruned_intensity)  # model is returned here
             # Fix camera motion - doesn't help much in performance!
             if cmc_method != 'none':
@@ -411,7 +411,7 @@ if __name__ == '__main__':
             # print('Number of extracted states:', len(estimates['w']))
 
             # Extract features from cropped images using their estimated bounding boxes
-            if feature_extraction_stage_type:
+            if feature_extraction_estimates:
                 tlbrs = []
                 estimates['feat'] = []
                 crops = []

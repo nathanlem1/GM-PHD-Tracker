@@ -24,7 +24,7 @@ tracking:
     window_ReId: 2000
     reid_threshold: 0.2  # 0.2 (better) #0.3  # threshold for reid (lower will require greater similarity)
 
-    feature_extraction_stage_type: False  # Set to True for extracting features from estimates or to False for extracting
+    feature_extraction_estimates: False  # Set to True for extracting features from estimates or to False for extracting
     # features from observations (detections) which also allows augmented likelihood at the update step.
 
     use_Jmax: True  # Set to True if you want to use J_max or to False for not using it.
