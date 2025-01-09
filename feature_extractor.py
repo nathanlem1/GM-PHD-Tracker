@@ -182,15 +182,19 @@ class FeatureExtractor:
         H, W, _ = image.shape
         ims = []
         for i in range(detections.shape[0]):
-            # Constrain points to within frame
-            if detections[i, 0] < 0:  # left
-                detections[i, 0] = 0
-            if detections[i, 1] < 0:  # top
-                detections[i, 1] = 0
-            if detections[i, 2] > W:  # right
-                detections[i, 2] = W
-            if detections[i, 3] > H:  # bottom
-                detections[i, 3] = H
+            # # Constrain points to within image frame
+            # if detections[i, 0] < 0:  # left
+            #     detections[i, 0] = 0
+            # if detections[i, 1] < 0:  # top
+            #     detections[i, 1] = 0
+            # if detections[i, 2] > W:  # right
+            #     detections[i, 2] = W
+            # if detections[i, 3] > H:  # bottom
+            #     detections[i, 3] = H
+            detections[i, 0] = max(0, detections[i, 0])  # The same as the commented above, but more efficient.
+            detections[i, 1] = max(0, detections[i, 1])
+            detections[i, 2] = min(W, detections[i, 2])
+            detections[i, 3] = min(H, detections[i, 3])
             # Take int
             x = int(detections[i, 0])
             y = int(detections[i, 1])
