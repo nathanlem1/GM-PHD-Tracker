@@ -137,7 +137,7 @@ def constrain_detections_inFrame(image, detections):
         if detections[i, 3] > h:  # bottom
             detections[i, 3] = h
 
-    return  detections
+    return detections
 
 
 def compute_associations(image, active_tracks, estimates_m, estimates_feat, include_appearance, appearance_weight):

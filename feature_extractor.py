@@ -178,6 +178,43 @@ class FeatureExtractor:
             return features
         return None
 
+    def inference(self, image, detections):
+        ims = []
+        for i in range(len(detections)):
+            x = int(detections[i, 0])
+            y = int(detections[i, 1])
+            X = int(detections[i, 2])
+            Y = int(detections[i, 3])
+            crop = image[y:Y, x:X, :]  # crop image
+            ims.append(crop)
+
+        batch_crops = []
+        crops = []
+        if len(ims) > 0:
+            for d, crop in enumerate(ims):
+                input_np = cv2.resize(crop, (128, 384))
+                input_np = input_np.transpose((2, 0, 1)) / 255.0  # This converts (H,W,C) to (C.H,W) and normalizes it.
+                inputs = torch.from_numpy(input_np).float()
+                crops.append(inputs)
+
+                if (d + 1) % self.batch_size == 0:
+                    crops = torch.stack(crops, dim=0)
+                    batch_crops.append(crops)
+                    crops = []
+
+            if len(crops):
+                crops = torch.stack(crops, dim=0)
+                batch_crops.append(crops)
+
+            features = np.zeros((0, 512))
+
+            for crops in batch_crops:
+                feats = self.model(crops.to(device))
+                features = np.vstack((features, feats.data.cpu().numpy()))
+
+            return features
+        return None
+
 
 def main():
     feature_extractor = FeatureExtractor("./pretrained/reid_model.pth")

@@ -341,7 +341,7 @@ if __name__ == '__main__':
                 detection_results = detection_results[detection_results[:, 5] == 0]  # 0 - Person class only,
                 # [x1, y1, x2, y2, conf, class]
 
-                dets_tm = np.zeros((len(detection_results), 5))
+                dets_tm = np.zeros((len(detection_results), 5))  # For Z_k
                 dets = copy.deepcopy(detection_results)  # For CMC
 
                 if feature_extraction_estimates:
