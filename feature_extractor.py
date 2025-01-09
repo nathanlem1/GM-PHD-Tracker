@@ -179,8 +179,19 @@ class FeatureExtractor:
         return None
 
     def inference(self, image, detections):
+        H, W, _ = image.shape
         ims = []
-        for i in range(len(detections)):
+        for i in range(detections.shape[0]):
+            # Constrain points to within frame
+            if detections[i, 0] < 0:  # left
+                detections[i, 0] = 0
+            if detections[i, 1] < 0:  # top
+                detections[i, 1] = 0
+            if detections[i, 2] > W:  # right
+                detections[i, 2] = W
+            if detections[i, 3] > H:  # bottom
+                detections[i, 3] = H
+            # Take int
             x = int(detections[i, 0])
             y = int(detections[i, 1])
             X = int(detections[i, 2])
