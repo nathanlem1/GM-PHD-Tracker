@@ -182,7 +182,7 @@ class FeatureExtractor:
         H, W, _ = image.shape
         ims = []
         for i in range(detections.shape[0]):
-            # # Constrain points to within image frame
+            # Constrain points to within image frame
             # if detections[i, 0] < 0:  # left
             #     detections[i, 0] = 0
             # if detections[i, 1] < 0:  # top

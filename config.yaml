@@ -21,7 +21,7 @@ tracking:
     # the PHD filter, this can be neglected as the filter is robust to clutter that causes short-lived tracks.
 
     appearance_weight: 0.65  # 0.9  # Appearance weight i.e. motion (spatio-temporal) weight = 1 - appearance_weight
-    window_ReId: 2000
+    window_ReId: 2000  # window of frames for the reid to be conducted.
     reid_threshold: 0.2  # 0.2 (better) #0.3  # threshold for reid (lower will require greater similarity)
 
     feature_extraction_estimates: False  # Set to True for extracting features from estimates or to False for extracting
