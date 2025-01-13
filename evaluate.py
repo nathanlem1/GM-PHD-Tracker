@@ -1,5 +1,6 @@
 """
 This code evaluates a Multi-Object Tracking (MOT) performance.
+NOTE: This code doesn't give correct result at the moment. Please use the official TrackVal as given in README.md!
 """
 import argparse
 from operator import attrgetter

@@ -64,8 +64,7 @@ datasets
 
 
 ## Tracking
-To perfrom tracking, you need to download the reid model from 
-[here](https://drive.google.com/file/d/1XWXzfcSrE2ie9TSGlIqQEeFfXE2lMmDe/view?usp=drive_link) and put it in `pretrained` 
+To perfrom tracking, you need to download the reid model from [here](https://drive.google.com/file/d/1XWXzfcSrE2ie9TSGlIqQEeFfXE2lMmDe/view?usp=drive_link) and put it in `pretrained` 
 folder under the `GM-PHD-Tracker`. You also need to set the correct data type you need to run the tracker on in 
 `config.yaml`. Then run the following code on terminal (using public detections):
 
@@ -82,14 +81,13 @@ python tracker.py --base_data ./datasets --base_result ./results/trackers --reid
 ```
 
 ## Evaluation
-To evaluate on MOT16, MOT17, MOT20, HiEve or DanceTrack train datasets, you can run the following code on terminal (which 
+<!---To evaluate on MOT16, MOT17, MOT20, HiEve or DanceTrack train datasets, you can run the following code on terminal (which 
 uses [py-motmetrics](https://github.com/cheind/py-motmetrics)):
-
 ```shell
 python evaluate.py --base_data ./datasets --base_result ./results/trackers
 ```
+Please look into the code for more details, particularly `config.yaml` for parameters setting.  --->
 
-Please look into the code for more details, particularly `config.yaml` for parameters setting.
 
 You can also use the official MOTChallenge evaluation code from [TrackEval](https://github.com/JonathonLuiten/TrackEval) 
 to evaluate the MOT16, MOT17, MOT20, HiEve and DanceTrack `train` datasets. DanceTrack also has `val` dataset, in which 
@@ -98,7 +96,7 @@ case you need to use `val` for `--SPLIT_TO_EVAL`.
 ```shell
 python TrackEval/scripts/run_mot_challenge.py --BENCHMARK MOT16 --SPLIT_TO_EVAL train --TRACKERS_TO_EVAL GMPHD1 --METRICS HOTA CLEAR Identity VACE --GT_FOLDER results/gt/ --TRACKERS_FOLDER results/trackers/ --USE_PARALLEL False --NUM_PARALLEL_CORES 1
 ```
-
+Please note the output folder name GMPHD1.
 
 ## Citation
 
