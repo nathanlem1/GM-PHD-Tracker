@@ -1,5 +1,6 @@
 import argparse
 import copy
+import sys
 from timeit import default_timer as timer
 
 import cv2
@@ -11,6 +12,8 @@ import torch
 from ultralytics import YOLO
 
 from loguru import logger
+
+sys.path.append('.')
 
 from tracker.gm_phd_filter import GM_PHD_Filter
 from tracker.cmc import CMC
@@ -40,7 +43,7 @@ if __name__ == '__main__':
     # torch.cuda.device_count()
 
     # Load config. Look at the comments in the config.yaml for more information about each variable or parameter.
-    with open('config.yaml', 'r') as stream:
+    with open('./config.yaml', 'r') as stream:
         config = yaml.load(stream, Loader=yaml.FullLoader)
 
     score_thresh = config['detection']['score_thresh']
