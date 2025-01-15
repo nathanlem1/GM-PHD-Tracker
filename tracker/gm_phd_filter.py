@@ -8,7 +8,7 @@ import numpy as np
 from scipy.stats import multivariate_normal
 import yaml
 
-from tracking_utils import appearance_likelihood
+from tracker.tracking_utils import appearance_likelihood
 
 # Load config
 with open('config.yaml', 'r') as stream:

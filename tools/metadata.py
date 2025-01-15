@@ -36,7 +36,7 @@ class Metadata:
                 
 
 if __name__ == "__main__":
-    test_video_path = './datasets/HiEve/HIE20test/test/20.mp4'
+    test_video_path = '../datasets/HiEve/HIE20test/test/20.mp4'
     metadata = Metadata(test_video_path)
 
     print('Frame count:', metadata.frame_count)

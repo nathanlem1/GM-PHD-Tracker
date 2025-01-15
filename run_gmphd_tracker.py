@@ -12,11 +12,11 @@ from ultralytics import YOLO
 
 from loguru import logger
 
-from GM_PHD_Filter import GM_PHD_Filter
-from cmc import CMC
-from feature_extractor import FeatureExtractor
-from tracking_utils import nms_score_mot, constrain_detections_inFrame, create_new_track, compute_associations, \
-    addOn_prediction, xcycwh_to_x1y1x2y2, multi_cmc
+from tracker.gm_phd_filter import GM_PHD_Filter
+from tracker.cmc import CMC
+from tracker.feature_extractor import FeatureExtractor
+from tracker.tracking_utils import nms_score_mot, constrain_detections_inFrame, create_new_track, \
+    compute_associations, addOn_prediction, xcycwh_to_x1y1x2y2, multi_cmc
 
 np.random.seed(5)  # For reproducibility
 

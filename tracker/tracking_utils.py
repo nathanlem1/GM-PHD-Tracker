@@ -6,7 +6,7 @@ import numpy as np
 import yaml
 
 from munkres import Munkres
-from track import Track
+from tracker.track import Track
 
 Hungarian = Munkres()
 
