@@ -665,5 +665,5 @@ if __name__ == '__main__':
         print("ID limit: {}".format(len(list(global_tracks))))
         end_time = timer()
         full_time = end_time - start_time
-        fps = frame / full_time
-        print('fps={0}'.format(fps))
+        fps = MAX_FRAMES / full_time
+        print('Time taken including processing detections and writing track outputs is fps={:.4f}.'.format(fps))

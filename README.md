@@ -69,7 +69,7 @@ folder under the `GM-PHD-Tracker`. You also need to set the correct data type yo
 `config.yaml`. Then run the following code on terminal (using public detections):
 
 ```shell
-python run_gmphd_tracker.py --base_data ./datasets --base_result ./results/trackers --reid_path ./pretrained/reid_model.pth --detections_type " "
+python gm_phd_tracker.py --base_data ./datasets --base_result ./results/trackers --reid_path ./pretrained/reid_model.pth --detections_type " "
 ```
 
 There are two detection types to use: using MOT Challenge and HiEve public detections OR YOLOv8 custom detections. 
@@ -77,7 +77,7 @@ Please look into the code for more details, particularly `config.yaml` for param
 code on terminal (for using YOLOv8 detections):
 
 ```shell
-python run_gmphd_tracker.py --base_data ./datasets --base_result ./results/trackers --reid_path ./pretrained/reid_model.pth --detections_type "yolo"
+python gm_phd_tracker.py --base_data ./datasets --base_result ./results/trackers --reid_path ./pretrained/reid_model.pth --detections_type "yolo"
 ```
 
 ## Evaluation
