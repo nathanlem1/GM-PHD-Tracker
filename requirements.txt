@@ -5,8 +5,9 @@ munkres
 opencv-python
 pymediainfo
 scipy>=1.0.0
-torch>=0.4.1
-torchvision>=0.2.1
+thop
+torch>=2.2.2
+torchvision>=0.17.2
 PyYAML
 ultralytics
 loguru
