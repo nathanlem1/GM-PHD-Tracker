@@ -24,7 +24,10 @@ from tracker.tracking_utils import nms_score_mot, constrain_detections_inFrame, 
 np.random.seed(5)  # For reproducibility
 
 
-if __name__ == '__main__':
+def main():
+    """
+    Main function to run GM-PHD-Tracker.
+    """
     parser = argparse.ArgumentParser(description='Tracking pipeline for GM-PHD-Tracker.')
     parser.add_argument('--base_data', type=str, default='./datasets',
                         help="Path to base tracking data folder.")
@@ -376,7 +379,7 @@ if __name__ == '__main__':
                         # If this fails due to memory issue, you need to reduce the batch_size for feature extraction
                         features_all = feat_extractor.extract_features_batch(crops)
                     else:
-                         [features_all.append(0.0) for i in range(len(detection_results))]  # Fill dummy values
+                        [features_all.append(0.0) for i in range(len(detection_results))]  # Fill dummy values
 
                     dets_tm[:, 2:4] -= dets_tm[:, 0:2]  # convert [x1,y1,x2,y2] to [x1,y1,w,h]
                     dets_tm[:, 0:2] += dets_tm[:, 2:4] / 2.0  # convert [x1,y1,w,h] to [xc,yc,w,h]
@@ -667,3 +670,8 @@ if __name__ == '__main__':
         full_time = end_time - start_time
         fps = MAX_FRAMES / full_time
         print('Time taken including processing detections and writing track outputs is fps={:.4f}.'.format(fps))
+
+
+# Execute from the interpreter
+if __name__ == "__main__":
+    main()
